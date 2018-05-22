@@ -1,0 +1,7 @@
+TODO:
+
+* bug: progress bleibt am ende, wenn man eine neue datei anklickt beim "alten" wert
+* Style von eingefügten Folientexten entfernen (aka "alte variante") -> mit stephan klären
+
+* Autoscroll ListView-Log ?
+* https://stackoverflow.com/questions/3317194/mvvm-how-to-make-a-list-view-auto-scroll-to-a-new-item-in-a-list-view
