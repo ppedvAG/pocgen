@@ -80,3 +80,9 @@ C:\Users\Michael Zöhling\source\pocgen\ppedv.pocgen\View\pocgen_WordAddIn\obj\D
 C:\Users\Michael Zöhling\source\pocgen\ppedv.pocgen\View\pocgen_WordAddIn\obj\Debug\pocgen_WordAddIn.csproj.CopyComplete
 C:\Users\Michael Zöhling\source\pocgen\ppedv.pocgen\View\pocgen_WordAddIn\obj\Debug\pocgen_WordAddIn.dll
 C:\Users\Michael Zöhling\source\pocgen\ppedv.pocgen\View\pocgen_WordAddIn\obj\Debug\pocgen_WordAddIn.pdb
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\View\pocgen_WordAddIn\obj\Debug\pocgen_WordAddIn.csprojAssemblyReference.cache
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\View\pocgen_WordAddIn\obj\Debug\pocgen_WordAddIn.pocgen_Ribbon.resources
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\View\pocgen_WordAddIn\obj\Debug\pocgen_WordAddIn.Properties.Resources.resources
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\View\pocgen_WordAddIn\obj\Debug\pocgen_WordAddIn.csproj.GenerateResource.cache
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\View\pocgen_WordAddIn\obj\Debug\pocgen_WordAddIn.dll
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\View\pocgen_WordAddIn\obj\Debug\pocgen_WordAddIn.pdb

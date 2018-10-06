@@ -9,3 +9,9 @@ C:\Users\Michael Zöhling\source\pocgen\ppedv.pocgen\Contracts\Interfaces\obj\De
 C:\Users\Michael Zöhling\source\pocgen\ppedv.pocgen\Contracts\Interfaces\obj\Debug\Interfaces.csproj.CoreCompileInputs.cache
 C:\Users\Michael Zöhling\source\pocgen\ppedv.pocgen\Contracts\Interfaces\obj\Debug\pocgen.Contracts.Interfaces.dll
 C:\Users\Michael Zöhling\source\pocgen\ppedv.pocgen\Contracts\Interfaces\obj\Debug\pocgen.Contracts.Interfaces.pdb
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\Contracts\Interfaces\bin\Debug\pocgen.Contracts.Interfaces.dll
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\Contracts\Interfaces\bin\Debug\pocgen.Contracts.Interfaces.pdb
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\Contracts\Interfaces\obj\Debug\Interfaces.csprojAssemblyReference.cache
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\Contracts\Interfaces\obj\Debug\Interfaces.csproj.CoreCompileInputs.cache
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\Contracts\Interfaces\obj\Debug\pocgen.Contracts.Interfaces.dll
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\Contracts\Interfaces\obj\Debug\pocgen.Contracts.Interfaces.pdb
