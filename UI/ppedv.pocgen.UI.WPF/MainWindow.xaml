@@ -8,100 +8,227 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:vm="clr-namespace:ppedv.pocgen.UI.ViewModels;assembly=ppedv.pocgen.UI.ViewModels"
         mc:Ignorable="d"
-        Title="ppedv Kursgenerator" Height="450" Width="1000">
+        Title="ppedv Kursgenerator" Height="500" Width="500" ResizeMode="NoResize" WindowStyle="ToolWindow">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
-    
+    <Window.Resources>
+        <helpers:ButtonStartEnabledConverter x:Key="buttonStartEnabledConverter"/>
+        <Style TargetType="TextBlock" x:Key="textBlockDescriptionStyle">
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="FontSize" Value="40"/>
+            <Setter Property="FontFamily" Value="Sylfaen"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="50"/>
+            <Setter Property="FontSize" Value="40"/>
+            <Setter Property="FontFamily" Value="Sylfaen"/>
+            <Setter Property="Background" Value="LightBlue"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            BorderBrush="{TemplateBinding Foreground}"
+                            CornerRadius="25"
+                            Padding="10"
+                            BorderThickness="10"
+                            Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="LightCoral"/>
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
+        <Style TargetType="Button" x:Key="ButtonContinueStyle">
+            <Setter Property="Margin" Value="50"/>
+            <Setter Property="FontSize" Value="40"/>
+            <Setter Property="FontFamily" Value="Sylfaen"/>
+            <Setter Property="Background" Value="LightBlue"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            BorderBrush="{TemplateBinding Foreground}"
+                            CornerRadius="25"
+                            Padding="10"
+                            BorderThickness="10"
+                            Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="LightCoral"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Storyboard x:Key="NavigateToFolderSelection">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectPresentationFolder">
+                <EasingThicknessKeyFrame KeyTime="0" Value="0,500,0,0"/>
+                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0"/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="NavigateToModuleSelection">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectModules">
+                <EasingThicknessKeyFrame KeyTime="0" Value="0,500,0,0"/>
+                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0"/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="NavigateToOptions">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectOptions">
+                <EasingThicknessKeyFrame KeyTime="0" Value="0,500,0,0"/>
+                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0"/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="NavigateToGenerate">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridGenerate">
+                <EasingThicknessKeyFrame KeyTime="0" Value="0,500,0,0"/>
+                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0"/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="NavigateToSelectTemplate">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridGenerate">
+                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0,500,0,0"/>
+            </ThicknessAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectOptions">
+                <EasingThicknessKeyFrame KeyTime="0:0:0.4" Value="0,500,0,0"/>
+            </ThicknessAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectModules">
+                <EasingThicknessKeyFrame KeyTime="0:0:0.5" Value="0,500,0,0"/>
+            </ThicknessAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectPresentationFolder">
+                <EasingThicknessKeyFrame KeyTime="0:0:0.6" Value="0,500,0,0"/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonGoToSelectPresentationFolder">
+            <BeginStoryboard Storyboard="{StaticResource NavigateToFolderSelection}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonGoToSelectModules">
+            <BeginStoryboard x:Name="NavigateToModuleSelection_BeginStoryboard" Storyboard="{StaticResource NavigateToModuleSelection}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonGoToGridSelectOptions">
+            <BeginStoryboard x:Name="NavigateToOptions_BeginStoryboard" Storyboard="{StaticResource NavigateToOptions}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonGoToGenerate">
+            <BeginStoryboard x:Name="NavigateToGenerate_BeginStoryboard" Storyboard="{StaticResource NavigateToGenerate}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonReset">
+            <BeginStoryboard x:Name="NavigateToSelectTemplate_BeginStoryboard" Storyboard="{StaticResource NavigateToSelectTemplate}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
     <TabControl>
         <TabItem Header="Word-Dokumentation generieren">
-            <Grid IsEnabled="{Binding UIElementsEnabled}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition MinWidth="250" MaxWidth="500" Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
-                <Grid.Resources>
-                    <helpers:ButtonStartEnabledConverter x:Key="buttonStartEnabledConverter"/>
-                    <Style TargetType="TextBlock" x:Key="textBlockDescriptionStyle">
-                        <Setter Property="Margin" Value="5,0"/>
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                    </Style>
-                </Grid.Resources>
+            <Grid x:Name="gridRoot" IsEnabled="{Binding UIElementsEnabled}">
+                <Grid x:Name="gridSelectTemplate">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.362,1.085" StartPoint="0.37,-0.594">
+                            <GradientStop Color="#FF111971" Offset="0"/>
+                            <GradientStop Color="#FF00F0FD" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox Text="{Binding TemplatePath, Mode=TwoWay,UpdateSourceTrigger=LostFocus}" ToolTip="{Binding TemplatePath}" VerticalAlignment="Center"  />
+                        <Button  Content="Vorlage auswählen" Command="{Binding ButtonSelectTemplateClickCommand}"/>
+                        <Button x:Name="buttonGoToSelectPresentationFolder"  Content="Weiter">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource ButtonContinueStyle}">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsValidTemplateSelected}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <Grid x:Name="gridSelectPresentationFolder" Margin="0,500,0,0">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.362,1.085" StartPoint="0.37,-0.594">
+                            <GradientStop Color="#FF869419" Offset="0"/>
+                            <GradientStop Color="#FFF8FFA3" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox  Text="{Binding FolderPath, Mode=TwoWay,UpdateSourceTrigger=LostFocus}" ToolTip="{Binding FolderPath}" VerticalAlignment="Center" />
+                        <Button  Content="Ordner auswählen" Background="LightYellow" Command="{Binding ButtonSelectFolderClickCommand}" />
+                        <Button x:Name="buttonGoToSelectModules"  Content="Weiter" Background="LightYellow">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource ButtonContinueStyle}">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsValidFolderSelected}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <Grid x:Name="gridSelectModules" Margin="0,500,0,0">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.362,1.085" StartPoint="0.37,-0.594">
+                            <GradientStop Color="#FF076312" Offset="0"/>
+                            <GradientStop Color="#FF32EA90" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <StackPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock HorizontalAlignment="Center" Text="Dateien auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
+                        <ListView ItemsSource="{Binding PowerPointPresentations}" Height="150" Opacity="0.8" >
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ToolTip="{Binding LayoutDescription}" ToolTipService.ShowOnDisabled="True">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Word-Template auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
-                <TextBox Grid.Column="1" Grid.Row="0"  Text="{Binding TemplatePath, Mode=TwoWay,UpdateSourceTrigger=LostFocus}" ToolTip="{Binding TemplatePath}" VerticalAlignment="Center"  />
-                <Button Grid.Column="2" Grid.Row="0" Content="Vorlage auswählen" Margin="5" Padding="4" Command="{Binding ButtonSelectTemplateClickCommand}"/>
-                <Image Grid.Column="3" Grid.Row="0" Height="40" Width="50" Source="Icons/check.png">
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Setter Property="Visibility" Value="Hidden"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsValidTemplateSelected}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
+                                        <CheckBox IsChecked="{Binding IsIncluded}" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding FileName}"  Grid.Column="1"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Alle auswählen" Background="LightGreen" FontSize="20" Margin="5" Command="{Binding ButtonSelectAllPresentationsClickCommand}"/>
+                            <Button Content="Alle abwählen" Background="LightGreen" FontSize="20" Margin="5" Command="{Binding ButtonUnselectAllPresentationsClickCommand}"/>
+                        </StackPanel>
+                        <Button x:Name="buttonGoToGridSelectOptions"  Content="Weiter">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource ButtonContinueStyle}">
+                                    <Setter Property="Margin" Value="5"/>
+                                    <Setter Property="Background" Value="LightGreen"/>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
 
-                <TextBlock Grid.Row="1" Text="Ordner mit PowerPoint-Präsentationen auswählen: " Style="{StaticResource textBlockDescriptionStyle}"/>
-                <TextBox Grid.Column="1" Grid.Row="1"  Text="{Binding FolderPath, Mode=TwoWay,UpdateSourceTrigger=LostFocus}" ToolTip="{Binding FolderPath}" VerticalAlignment="Center" />
-                <Button Grid.Column="2" Grid.Row="1" Content="Ordner auswählen" Margin="5" Padding="4" Command="{Binding ButtonSelectFolderClickCommand}" />
-                <Image Grid.Column="3" Grid.Row="1" Height="40" Width="50" Source="Icons/check.png">
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Setter Property="Visibility" Value="Hidden"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsValidFolderSelected}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
-
-                <TextBlock Grid.Row="2" Text="Zu verarbeitende Module auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
-                <ListView Grid.Row="3" Grid.ColumnSpan="3" Margin="5" ItemsSource="{Binding PowerPointPresentations}" >
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid  ToolTip="{Binding LayoutDescription}" ToolTipService.ShowOnDisabled="True">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <CheckBox IsChecked="{Binding IsIncluded}" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <Label Content="{Binding FileName}"  Grid.Column="1"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-                <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.ColumnSpan="4" Margin="0,10">
-                    <Button Content="Alle auswählen" Command="{Binding ButtonSelectAllPresentationsClickCommand}" Margin="5,0,20,0" Padding="4" />
-                    <Button Content="Alle abwählen" Command="{Binding ButtonUnselectAllPresentationsClickCommand}" Margin="20,0" Padding="4" />
-                </StackPanel>
-
-                <StackPanel Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="3">
-                    <TextBlock Text="Optionen: " Style="{StaticResource textBlockDescriptionStyle}"/>
-                    <Expander Margin="5,0,5,0" >
-                        <ListView ItemsSource="{Binding GeneratorOptions}">
+                </Grid>
+                <Grid x:Name="gridSelectOptions" Margin="0,500,0,0">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.362,1.085" StartPoint="0.37,-0.594">
+                            <GradientStop Color="#FFDDE522" Offset="0"/>
+                            <GradientStop Color="#FFEEEDCE" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock HorizontalAlignment="Center" Text="Optionen: " Style="{StaticResource textBlockDescriptionStyle}"/>
+                        <ListView ItemsSource="{Binding GeneratorOptions}" Height="100" Opacity="0.8" Margin="0,20,0,0">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -115,60 +242,63 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                    </Expander>
-                </StackPanel>
-
-                <Button Grid.Column="0" Grid.Row="6" Content="Start" Margin="5" Padding="4" Command="{Binding ButtonStartClickCommand}" >
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="IsEnabled" Value="False"/>
-                            <Style.Triggers>
-                                <DataTrigger Value="True">
-                                    <DataTrigger.Binding>
-                                        <MultiBinding Converter="{StaticResource buttonStartEnabledConverter}">
-                                            <Binding Path="IsValidTemplateSelected"/>
-                                            <Binding Path="IsValidFolderSelected"/>
-                                            <Binding ElementName="progressBarGeneratorProgress" Path="IsIndeterminate"/>
-                                        </MultiBinding>
-                                    </DataTrigger.Binding>
-                                    <Setter Property="IsEnabled" Value="True"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <Button Grid.Column="2" Grid.Row="6" Content="Reset" Margin="5" Padding="4" Command="{Binding ButtonResetClickCommand}" />
-
-                <TextBlock Grid.Column="0" Grid.Row="7" Text="Fortschritt:" Style="{StaticResource textBlockDescriptionStyle}"/>
-                <ProgressBar x:Name="progressBarGeneratorProgress" Height="10" Margin="5" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="8" Minimum="0" Maximum="{Binding GeneratorProgressMaximum, Mode=OneWay}" Value="{Binding GeneratorProgressValue, Mode=OneWay}">
-                    <ProgressBar.Style>
-                        <Style TargetType="ProgressBar">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=textBlockProgress, Path=Visibility}" Value="Hidden">
-                                    <Setter Property="IsIndeterminate" Value="True"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ProgressBar.Style>
-                </ProgressBar>
-
-                <TextBlock x:Name="textBlockProgress" Grid.Column="5" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.Text>
-                        <MultiBinding StringFormat="{}{0} / {1}">
-                            <Binding ElementName="progressBarGeneratorProgress" Path="Value" />
-                            <Binding ElementName="progressBarGeneratorProgress" Path="Maximum" />
-                        </MultiBinding>
-                    </TextBlock.Text>
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="0 / 0">
-                                    <Setter Property="Visibility" Value="Hidden"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                        <Button x:Name="buttonGoToGenerate"  Content="Weiter">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource ButtonContinueStyle}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Setter Property="Margin" Value="5"/>
+                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsValidTemplateSelected}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <Grid x:Name="gridGenerate" Margin="0,500,0,0">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.362,1.085" StartPoint="0.37,-0.594">
+                            <GradientStop Color="#FFFA0000" Offset="0"/>
+                            <GradientStop Color="#FFEECECE" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Content="Start" Command="{Binding ButtonStartClickCommand}" Background="LightPink"/>
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="0" Grid.Row="7" Text="Fortschritt:" Style="{StaticResource textBlockDescriptionStyle}"/>
+                        <ProgressBar x:Name="progressBarGeneratorProgress" Height="10" Margin="5" Minimum="0" Maximum="{Binding GeneratorProgressMaximum, Mode=OneWay}" Value="{Binding GeneratorProgressValue, Mode=OneWay}">
+                            <ProgressBar.Style>
+                                <Style TargetType="ProgressBar">
+                                    <!--<Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=textBlockProgress, Path=Visibility}" Value="Hidden">
+                                            <Setter Property="IsIndeterminate" Value="True"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>-->
+                                </Style>
+                            </ProgressBar.Style>
+                        </ProgressBar>
+                        <TextBlock x:Name="textBlockProgress" Grid.Column="3" Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} / {1}">
+                                    <Binding ElementName="progressBarGeneratorProgress" Path="Value" />
+                                    <Binding ElementName="progressBarGeneratorProgress" Path="Maximum" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="0 / 0">
+                                            <Setter Property="Visibility" Value="Hidden"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <Button x:Name="buttonReset" Content="Reset" Command="{Binding ButtonResetClickCommand}" Background="LightPink" />
+                    </StackPanel>
+                </Grid>
             </Grid>
         </TabItem>
     </TabControl>
