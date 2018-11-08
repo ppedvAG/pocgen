@@ -1,19 +1,19 @@
-﻿using Microsoft.Win32;
+﻿using System;
+using System.Text;
 using ppedv.pocgen.Domain.Interfaces;
 using ppedv.pocgen.Domain.Models;
 using ppedv.pocgen.Logic;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
 using System.Windows.Input;
 
 using Word = Microsoft.Office.Interop.Word;
+using System.Threading.Tasks;
 
 namespace ppedv.pocgen.UI.ViewModels
 {
@@ -21,9 +21,7 @@ namespace ppedv.pocgen.UI.ViewModels
     {
         public MainViewModel()
         {
-            wordInstance = new Word.Application();
-
-            this.wordFileOpener = new WordDocumentOpener(wordInstance, new string[] { ".doc", ".docx", ".dot", ".dotx" });
+            this.wordFileOpener = new WordDocumentOpener(new string[] { ".doc", ".docx", ".dot", ".dotx" });
             this.powerPointFileOpener = new PowerPointPresentationOpener(new string[] { ".ppt", ".pptx" });
             this.GeneratorOptions = new ObservableCollection<IGeneratorOption>
             {
@@ -31,7 +29,6 @@ namespace ppedv.pocgen.UI.ViewModels
                 new GeneratorOption("ISBreakBetween","Seitenumbrich zwischen einzelnen Bilderfolien"),
             };
             this.generator = new Generator(powerPointFileOpener, new FieldFiller());
-            this.outputDocument = new WordDocument(wordInstance.Documents.Add());
 
             PowerPointPresentations = new ObservableCollection<PowerPointPresentationItem>();
             IsValidFolderSelected = false;
@@ -40,15 +37,8 @@ namespace ppedv.pocgen.UI.ViewModels
             generator.GeneratorProgressChanged += (sender, e) => GeneratorProgressValue = e.TotalSlidesDone;
 
         }
-        ~MainViewModel()
-        {
-            wordInstance.Quit();
-        }
-
-        private readonly Word.Application wordInstance;
 
         private IWordDocument templateForOutputDocument;
-        private readonly IWordDocument outputDocument;
         private readonly IGenerator generator;
         private readonly IOfficeFileOpener<IWordDocument> wordFileOpener;
         private readonly IOfficeFileOpener<IPowerPointPresentation> powerPointFileOpener;
@@ -244,14 +234,19 @@ namespace ppedv.pocgen.UI.ViewModels
             {
                 buttonStartClickCommand = buttonStartClickCommand ?? new RelayCommand(parameter =>
                 {
-                    UIElementsEnabled = false;
-                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Start");
-                    generator.GenerateDocument(PowerPointPresentations
-                            .Where(x => x.IsIncluded)
-                            .Select(x => x.FileName), templateForOutputDocument, outputDocument, GeneratorOptions);
-                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Finish");
-                    UIElementsEnabled = true;
-                    wordInstance.Visible = true; //TODO: -??
+                    Task.Run(() =>
+                    {
+                        var wordInstance = new Word.Application();
+                        var outputDocument = new WordDocument(wordInstance.Documents.Add());
+                        UIElementsEnabled = false;
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Start");
+                        generator.GenerateDocument(PowerPointPresentations
+                                .Where(x => x.IsIncluded)
+                                .Select(x => x.FileName), templateForOutputDocument, outputDocument, GeneratorOptions);
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Finish");
+                        UIElementsEnabled = true;
+                        wordInstance.Visible = true;
+                    });
                 });
                 return buttonStartClickCommand;
             }
