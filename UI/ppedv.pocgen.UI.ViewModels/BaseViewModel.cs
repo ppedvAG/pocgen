@@ -12,14 +12,16 @@ namespace ppedv.pocgen.UI.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        protected virtual void SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        protected virtual bool SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
-            if (! EqualityComparer<T>.Default.Equals(field, value))
+            if (!EqualityComparer<T>.Default.Equals(field, value))
             {
                 field = value;
                 OnPropertyChanged(propertyName);
-                Trace.WriteLine($"[{this.ToString()}|{MethodBase.GetCurrentMethod().Name}]Value changed to '{ value?.ToString() ?? "null"}'");
+                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}]Value changed to '{ value?.ToString() ?? "null"}'");
+                return true;
             }
+            return false;
         }
     }
 }

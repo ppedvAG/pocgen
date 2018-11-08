@@ -21,7 +21,6 @@ C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\bin\Deb
 C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\bin\Debug\netstandard2.0\Office.xml
 C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\bin\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.Word.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\bin\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.PowerPoint.dll
-C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\ppedv.pocgen.Domain.csprojAssemblyReference.cache
 C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.Word.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.PowerPoint.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\ppedv.pocgen.Domain.csproj.ResolveComReference.cache
