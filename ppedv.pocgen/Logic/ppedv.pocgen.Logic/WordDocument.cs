@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Office.Interop.Word;
 using System.Reflection;
 using ppedv.pocgen.Domain.Interfaces;
+using ppedv.pocgen.Domain.Models;
 
-namespace ppedv.pocgen.Domain.Models
+namespace ppedv.pocgen.Logic
 {
     public class WordDocument : IWordDocument
     {

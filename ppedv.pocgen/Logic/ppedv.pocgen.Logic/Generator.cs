@@ -9,8 +9,9 @@ using Microsoft.Office.Interop.PowerPoint;
 using Microsoft.Office.Core;
 using System.Reflection;
 using ppedv.pocgen.Domain.Interfaces;
+using ppedv.pocgen.Domain.Models;
 
-namespace ppedv.pocgen.Domain.Models
+namespace ppedv.pocgen.Logic
 {
     public class Generator : IGenerator
     {

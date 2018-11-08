@@ -10,8 +10,9 @@ using System.Text.RegularExpressions;
 using System.Reflection;
 using ppedv.pocgen.Domain.Interfaces;
 using Microsoft.Office.Core;
+using ppedv.pocgen.Domain.Models;
 
-namespace ppedv.pocgen.Domain.Models
+namespace ppedv.pocgen.Logic
 {
     public class FieldFiller : IFieldFiller
     {

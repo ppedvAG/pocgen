@@ -1,4 +1,3 @@
-C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\ppedv.pocgen.Domain.csprojAssemblyReference.cache
 C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.Word.dll
 C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.PowerPoint.dll
 C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\ppedv.pocgen.Domain.csproj.ResolveComReference.cache

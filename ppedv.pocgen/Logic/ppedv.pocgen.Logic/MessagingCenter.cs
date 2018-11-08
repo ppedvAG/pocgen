@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ppedv.pocgen.Domain.Models
+namespace ppedv.pocgen.Logic
 {
     public static class MessagingCenter // ehe "PseudoMessagingCenter" ;)
     {
