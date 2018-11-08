@@ -10,6 +10,7 @@ using Microsoft.Office.Core;
 using System.Reflection;
 using ppedv.pocgen.Domain.Interfaces;
 using ppedv.pocgen.Domain.Models;
+using System.Diagnostics;
 
 namespace ppedv.pocgen.Logic
 {
@@ -39,12 +40,12 @@ namespace ppedv.pocgen.Logic
             foreach (string pathToPowerPointPresentation in usedPowerPointPresentations)
             {
                 var presentation = fileOpener.OpenFile(pathToPowerPointPresentation);
-                MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Opened file {pathToPowerPointPresentation}"));
+                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Opened file {pathToPowerPointPresentation}");
 
                 if (!isFirstModule)
                 {
                     InsertNewSectionIntoOutputDocument(outputDocument);
-                    MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"New section inserted"));
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] New section inserted");
                 }
 
                 for (int currentSlideNumber = 1; currentSlideNumber <= presentation.Slides.Count; currentSlideNumber++)
@@ -61,12 +62,12 @@ namespace ppedv.pocgen.Logic
                             if (isFirstModule && isTitleText) // Modul00 - Titeltext
                             {
                                 courseInfo.CourseName = GetTitleTextFromFirstSlideInPresentation(presentation);
-                                MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"got courseInfo from first slide in {pathToPowerPointPresentation}"));
+                                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] got courseInfo from first slide in {pathToPowerPointPresentation}");
                             }
                             else if (!isFirstModule && isTitleText) // ModulXX - Titeltext
                             {
                                 courseInfo.CourseCurrentModuleName = GetTitleTextFromFirstSlideInPresentation(presentation);
-                                MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"got current module name from first slide in {pathToPowerPointPresentation}"));
+                                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] got current module name from first slide in {pathToPowerPointPresentation}");
                             }
                             #endregion
                             CopyTemplateToClipboardAndPasteIntoOutputDocument(templateForOutputDocument, outputDocument);
@@ -85,7 +86,7 @@ namespace ppedv.pocgen.Logic
                             {
                                 outputDocument.Range(outputDocumentStartOfCurentPage, outputDocumentStartOfCurentPage).InsertBreak(WdBreakType.wdPageBreak);
                                 JumpToLastPositionInDocumentAndSetCursor(outputDocument);
-                                MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"inserted break for ImageSlide according to option set in UI"));
+                                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] inserted break for ImageSlide according to option set in UI");
                             }
 
                             CopyTemplateToClipboardAndPasteIntoOutputDocument(templateForOutputDocument, outputDocument);
@@ -100,7 +101,7 @@ namespace ppedv.pocgen.Logic
                                 }
                             }
 
-                            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"removed Inhalt-Tag for screenshot-page {currentSlideNumber}"));
+                            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] removed Inhalt-Tag for screenshot-page {currentSlideNumber}");
 
                             break;
                     }
@@ -123,12 +124,12 @@ namespace ppedv.pocgen.Logic
 
         private void FillHeaderAndFooterForFinishedSection(IWordDocument outputDocument, IPowerPointPresentation presentation)
         {
-            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Start inserting Headers for current section"));
+            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Start inserting Headers for current section");
 
             foreach (Field field in outputDocument.Sections[outputDocument.Sections.Count].Headers[WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.Fields)
                 fieldFiller.FillFieldWithInfo(field, presentation.Slides[presentation.Slides.Count], courseInfo);
 
-            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Start inserting Footers for current section"));
+            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Start inserting Footers for current section");
 
             foreach (Field field in outputDocument.Sections[outputDocument.Sections.Count].Footers[WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.Fields)
                 fieldFiller.FillFieldWithInfo(field, presentation.Slides[presentation.Slides.Count], courseInfo);
@@ -136,12 +137,11 @@ namespace ppedv.pocgen.Logic
 
         private void FillAllFieldsForTheCurrentPage(IWordDocument outputDocument, IPowerPointPresentation presentation, int currentSlideNumber, int outputDocumentStartOfCurentPage, int outputDocumenEndOfCurrentPage)
         {
-            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Start filling Fields for slide {currentSlideNumber}"));
+            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Start filling Fields for slide {currentSlideNumber}");
 
             foreach (Field field in outputDocument.Range(outputDocumentStartOfCurentPage, outputDocumenEndOfCurrentPage).Fields)
                 fieldFiller.FillFieldWithInfo(field, presentation.Slides[currentSlideNumber], courseInfo);
-
-            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"All Fields for slide {currentSlideNumber} filled"));
+            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] All Fields for slide {currentSlideNumber} filled");
         }
 
         private static string GetTitleTextFromFirstSlideInPresentation(IPowerPointPresentation presentation)
@@ -184,16 +184,16 @@ namespace ppedv.pocgen.Logic
                 catch (Exception) // Manchmal spinnt Word und braucht mehrere Versuche, ka warum
                 {
                     gotException = true;
-                    MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Exception while trying to copy template into clipboard: left:{maxTries}"));
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Exception while trying to copy template into clipboard: left:{maxTries}");
                     if (--maxTries == 0)
                     {
-                        MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"maxTries reached while trying to copy template into clipboard"));
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] maxTries reached while trying to copy template into clipboard");
                         break;
                     }
                 }
             } while (gotException);
             outputDocument.Selection.Paste();
-            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"template copied and pasted into outputDocument"));
+            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] template copied and pasted into outputDocument");
         }
     }
 }

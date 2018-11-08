@@ -11,6 +11,7 @@ using System.Reflection;
 using ppedv.pocgen.Domain.Interfaces;
 using Microsoft.Office.Core;
 using ppedv.pocgen.Domain.Models;
+using System.Diagnostics;
 
 namespace ppedv.pocgen.Logic
 {
@@ -32,7 +33,7 @@ namespace ppedv.pocgen.Logic
                     if (!string.IsNullOrWhiteSpace(title))
                     {
                         field.Result.Text = $"{correspondingSlide.Shapes.Title.TextEffect.Text}";
-                        MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Successfully filled Field '{fieldName}'"));
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}'");
                     }
                     field.Unlink();
                     break;
@@ -61,7 +62,7 @@ namespace ppedv.pocgen.Logic
                                     gotAnException = true;
                                     if (--maxTries == 0)
                                     {
-                                        MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"ERROR: Field '{fieldName}' could not paste Content"));
+                                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] ERROR: Field '{fieldName}' could not paste Content");
                                         field.Unlink();
                                         return;
                                     }
@@ -70,7 +71,7 @@ namespace ppedv.pocgen.Logic
                         }
                     }
                     field.Unlink();
-                    MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Successfully filled Field '{fieldName}' with content from slide"));
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}' with content from slide");
                     break;
                 case ("Notiz"):
                     string notesInSlide = string.Empty;
@@ -82,18 +83,18 @@ namespace ppedv.pocgen.Logic
                         }
                         catch (ArgumentException)
                         { // TextFrame.TextRange kann in einigen lustigen Kombinationen in PowerPoint eine ArgumentException auslösen -> ignorieren
-                            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Field: '{fieldName}' - no notes detected -> Exception ignored"));
+                            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Field: '{fieldName}' - no notes detected -> Exception ignored");
                         }
                         catch (Exception ex)
                         {
-                            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Field: '{fieldName}' - Unknown Exception:{ex.Message}"));
+                            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Field: '{fieldName}' - Unknown Exception:{ex.Message}");
                         }
                     }
                     if (!string.IsNullOrWhiteSpace(notesInSlide)) // Wenn Notizen vorhanden sind -> Notizen ausgeben
                     {
                         field.Result.Text = notesInSlide; // -> Notizen 1:1 in Word übertragen
                         field.Result.Paste();
-                        MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Successfully filled Field '{fieldName}' with notes"));
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}' with notes");
                     }
                     //TODO: Feature-Request Hannes: Wenn keine Notizen vorhanden sind, dann soll der Inhalt der Folie in das Notizenfelder der pptx eingetragen und gespeichert werden
                     field.Unlink();
@@ -101,21 +102,21 @@ namespace ppedv.pocgen.Logic
                 case ("Kursname"):
                     field.Result.Text = courseInfo.CourseName;
                     field.Unlink();
-                    MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Successfully filled Field '{fieldName}'"));
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}'");
                     break;
                 case ("Modul"):
                     field.Result.Text = courseInfo.CourseCurrentModuleName;
                     field.Unlink();
-                    MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Successfully filled Field '{fieldName}'"));
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}'");
                     break;
                 case ("Copyright"):
                     field.Result.Text = "ppedv AG";
                     field.Unlink();
-                    MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Successfully filled Field '{fieldName}'"));
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}'");
                     break;
                 case ("Seite"):
                     field.Code.Text = " Page"; // Page ist Feldfunktion, daher kein Unlink !
-                    MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Successfully changed Field '{fieldName}' to '{field.Code.Text}'"));
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully changed Field '{fieldName}' to '{field.Code.Text}'");
                     break;
                 case ("Slide"):
                     int maxtries = 3;
@@ -133,18 +134,18 @@ namespace ppedv.pocgen.Logic
                             gotException = true;
                             if (--maxtries == 0)
                             {
-                                MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"ERROR: Field '{fieldName}' could not be filled with screenshot"));
+                                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] ERROR: Field '{fieldName}' could not be filled with screenshot");
                                 field.Unlink();
                                 return;
                             }
                         }
                     } while (gotException);
                     field.Unlink();
-                    MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Successfully filled Field '{fieldName}'"));
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}'");
                     break;
                 default:
                     field.Result.Text = $"--- Tag {fieldName} wurde nicht erkannt ---";
-                    MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Unknown Field: '{fieldName}'"));
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Unknown Field: '{fieldName}'");
                     break;
             }
         }

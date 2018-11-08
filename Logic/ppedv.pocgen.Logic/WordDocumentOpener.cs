@@ -8,6 +8,7 @@ using Microsoft.Office.Interop.Word;
 using System.Reflection;
 using ppedv.pocgen.Domain.Interfaces;
 using ppedv.pocgen.Domain.Models;
+using System.Diagnostics;
 
 namespace ppedv.pocgen.Logic
 {
@@ -25,7 +26,7 @@ namespace ppedv.pocgen.Logic
         {
             if (!System.IO.File.Exists(fileName))
             {
-                MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"File {fileName} not found" ));
+                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] File {fileName} not found" );
                 throw new System.IO.FileNotFoundException("Die angegebene Word-Datei wurde nicht gefunden.", fileName);
             }
             return new WordDocument(application.Documents.Open(fileName, Visible: false));
@@ -35,7 +36,7 @@ namespace ppedv.pocgen.Logic
         {
             application?.Quit();
             application = null;
-            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"PowerPointPresentationOpener: disposed"));
+            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PowerPointPresentationOpener: disposed");
         }
     }
 }

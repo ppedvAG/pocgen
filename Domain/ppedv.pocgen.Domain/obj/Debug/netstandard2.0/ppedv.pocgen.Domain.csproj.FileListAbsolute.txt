@@ -30,4 +30,3 @@ C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\obj\Deb
 C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\ppedv.pocgen.Domain.csproj.CopyComplete
 C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\ppedv.pocgen.Domain.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\ppedv.pocgen.Domain.pdb
-C:\Users\Michael Zöhling\source\repos\pocgen\Domain\ppedv.pocgen.Domain\obj\Debug\netstandard2.0\ppedv.pocgen.Domain.csprojAssemblyReference.cache

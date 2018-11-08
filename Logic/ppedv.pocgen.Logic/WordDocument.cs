@@ -8,6 +8,7 @@ using Microsoft.Office.Interop.Word;
 using System.Reflection;
 using ppedv.pocgen.Domain.Interfaces;
 using ppedv.pocgen.Domain.Models;
+using System.Diagnostics;
 
 namespace ppedv.pocgen.Logic
 {
@@ -33,11 +34,11 @@ namespace ppedv.pocgen.Logic
             {
                 this.document?.Close(false);
                 this.document = null;
-                MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"WordDocument: disposed" ));
+                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] WordDocument: disposed" );
             }
             catch (Exception) // Liegt an Office, manchmal ist sogar ein "ForceClose" nicht möglich
             {
-                MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Exception when trying to dispose: Close() not possible"));
+                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Exception when trying to dispose: Close() not possible");
             }
         }
 
@@ -45,7 +46,7 @@ namespace ppedv.pocgen.Logic
 
         public void SetImageSyle() //TODO: Auslagern auf einen "ImageStyleSetter" ?
         {
-            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Start setting ImageStyle"));
+            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Start setting ImageStyle");
             foreach (InlineShape shape in document.InlineShapes)
             {
                 if (shape.Type == WdInlineShapeType.wdInlineShapePicture)
@@ -55,7 +56,7 @@ namespace ppedv.pocgen.Logic
                     shape.Borders.OutsideColor = WdColor.wdColorAutomatic;
                 }
             }
-            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"ImageStyle set successfully"));
+            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] ImageStyle set successfully");
         }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.Office.Core;
 using System.Reflection;
 using ppedv.pocgen.Domain.Interfaces;
 using ppedv.pocgen.Domain.Models;
+using System.Diagnostics;
 
 namespace ppedv.pocgen.Logic
 {
@@ -28,11 +29,11 @@ namespace ppedv.pocgen.Logic
             {
                 presentation?.Close();
                 presentation = null;
-                MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"PowerPointPresentation disposed"));
+                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PowerPointPresentation disposed");
             }
             catch (Exception)
             {
-                MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Exception when trying to dispose: Close() not possible"));
+                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Exception when trying to dispose: Close() not possible");
             }
         }
 
@@ -40,7 +41,7 @@ namespace ppedv.pocgen.Logic
         {
             if (pageNumber > presentation.Slides.Count) // Slides[] fängt bei 1 und nicht bei 0 an !
             {
-                MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"page {pageNumber} nonexistent"));
+                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] page {pageNumber} nonexistent");
                 throw new ArgumentException($"Angeforderte Seite {pageNumber} ist nicht vorhanden. Die Präsentation hat nur {presentation.Slides.Count} Seiten !");
             }
 
@@ -63,7 +64,7 @@ namespace ppedv.pocgen.Logic
                 case PpSlideLayout.ppLayoutOrgchart:
                     return SlideType.ImageSlide;       // TODO: Tabellen mit eigenem LayoutType oder Blank ?   
                 default:
-                    MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"Unknown SlideType detected:{presentation.Slides[pageNumber].Layout} in page {pageNumber}"));
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Unknown SlideType detected:{presentation.Slides[pageNumber].Layout} in page {pageNumber}");
                     return SlideType.Unknown;
             }
         }
