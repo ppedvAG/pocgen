@@ -15,7 +15,6 @@ C:\Users\Michael Zöhling\source\repos\pocgen\ppedv.pocgen\UI\ppedv.pocgen.UI.WP
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\ppedv.pocgen.UI.WPF.exe.config
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\ppedv.pocgen.UI.WPF.exe
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\ppedv.pocgen.UI.WPF.pdb
-C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\obj\Debug\ppedv.pocgen.UI.WPF.csprojAssemblyReference.cache
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\obj\Debug\MainWindow.g.cs
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\obj\Debug\App.g.cs
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\obj\Debug\ppedv.pocgen.UI.WPF_MarkupCompile.cache
