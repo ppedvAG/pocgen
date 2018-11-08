@@ -31,10 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Interop.Microsoft.Office.Interop.Word, Version=8.7.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Interop.Microsoft.Office.Interop.PowerPoint">
+      <HintPath>..\..\Logic\ppedv.pocgen.Logic\bin\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.PowerPoint.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Microsoft.Office.Interop.PowerPoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+    <Reference Include="Interop.Microsoft.Office.Interop.Word">
+      <HintPath>..\..\Logic\ppedv.pocgen.Logic\bin\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.Word.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
