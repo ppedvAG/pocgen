@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using ppedv.pocgen.Domain.Interfaces;
+using ppedv.pocgen.Logic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,33 +12,41 @@ using System.Text;
 using System.Windows.Forms;
 using System.Windows.Input;
 
+using Word = Microsoft.Office.Interop.Word;
+
 namespace ppedv.pocgen.UI.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        public MainViewModel(IOfficeFileOpener<IWordDocument> wordFileOpener, IOfficeFileOpener<IPowerPointPresentation> powerPointFileOpener, IGenerator generator, List<IGeneratorOption> GeneratorOptions, IWordDocument outputDocument)
+        public MainViewModel()
         {
-            this.wordFileOpener = wordFileOpener;
-            this.powerPointFileOpener = powerPointFileOpener;
+            wordInstance = new Word.Application();
+
+            this.wordFileOpener = new WordDocumentOpener(wordInstance, new string[] { ".doc", ".docx", ".dot", ".dotx" });
+            this.powerPointFileOpener = new PowerPointPresentationOpener(new string[] { ".ppt", ".pptx" });
             this.GeneratorOptions = new ObservableCollection<IGeneratorOption>(GeneratorOptions);
-            this.generator = generator;
-            this.outputDocument = outputDocument;
+            this.generator = new Generator(powerPointFileOpener, new FieldFiller());
+            this.outputDocument = new WordDocument(wordInstance.Documents.Add());
 
             PowerPointPresentations = new ObservableCollection<PowerPointPresentationItem>();
             IsValidFolderSelected = false;
             IsValidTemplateSelected = false;
             UIElementsEnabled = true;
-            generator.GeneratorProgressChanged += (sender, e) =>
-            {
-                GeneratorProgressValue = e.TotalSlidesDone;
-            };
+            generator.GeneratorProgressChanged += (sender, e) => GeneratorProgressValue = e.TotalSlidesDone;
+
+        }
+        ~MainViewModel()
+        {
+            wordInstance.Quit();
         }
 
+        private readonly Word.Application wordInstance;
+
         private IWordDocument templateForOutputDocument;
-        private IWordDocument outputDocument;
-        private IGenerator generator;
-        private IOfficeFileOpener<IWordDocument> wordFileOpener;
-        private IOfficeFileOpener<IPowerPointPresentation> powerPointFileOpener;
+        private readonly IWordDocument outputDocument;
+        private readonly IGenerator generator;
+        private readonly IOfficeFileOpener<IWordDocument> wordFileOpener;
+        private readonly IOfficeFileOpener<IPowerPointPresentation> powerPointFileOpener;
 
         private string dateFilter;
         public string DateFilter

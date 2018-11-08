@@ -97,7 +97,6 @@ C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\System.Xml.XPath.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\System.Xml.XPath.XDocument.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\ppedv.pocgen.Domain.dll
-C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\Interop.Microsoft.Office.Interop.Word.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\Interop.Microsoft.Office.Interop.PowerPoint.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\office.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\Microsoft.Vbe.Interop.dll
@@ -109,3 +108,5 @@ C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\obj\
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\obj\Debug\ppedv.pocgen.UI.ViewModels.csproj.CopyComplete
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\obj\Debug\ppedv.pocgen.UI.ViewModels.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\obj\Debug\ppedv.pocgen.UI.ViewModels.pdb
+C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\ppedv.pocgen.Logic.dll
+C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\ppedv.pocgen.Logic.pdb
