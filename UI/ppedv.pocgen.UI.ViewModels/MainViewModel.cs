@@ -35,7 +35,12 @@ namespace ppedv.pocgen.UI.ViewModels
             IsValidTemplateSelected = false;
             UIElementsEnabled = true;
             generator.GeneratorProgressChanged += (sender, e) => GeneratorProgressValue = e.TotalSlidesDone;
-
+        }
+        ~MainViewModel()
+        {
+            templateForOutputDocument?.Dispose();
+            wordFileOpener?.Dispose();
+            powerPointFileOpener?.Dispose();
         }
 
         private IWordDocument templateForOutputDocument;

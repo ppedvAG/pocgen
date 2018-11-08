@@ -8,16 +8,17 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:vm="clr-namespace:ppedv.pocgen.UI.ViewModels;assembly=ppedv.pocgen.UI.ViewModels"
         mc:Ignorable="d"
-        Title="ppedv Kursgenerator" Height="450" Width="800">
+        Title="ppedv Kursgenerator" Height="450" Width="1000">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
+    
     <TabControl>
-        <TabItem Header="Generator">
+        <TabItem Header="Word-Dokumentation generieren">
             <Grid IsEnabled="{Binding UIElementsEnabled}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition MinWidth="250" Width="Auto"/>
+                    <ColumnDefinition MinWidth="250" MaxWidth="500" Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -43,7 +44,7 @@
                     </Style>
                 </Grid.Resources>
 
-                <TextBlock Grid.Row="0" Text="Vorlage auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
+                <TextBlock Grid.Row="0" Text="Word-Template auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
                 <TextBox Grid.Column="1" Grid.Row="0"  Text="{Binding TemplatePath, Mode=TwoWay,UpdateSourceTrigger=LostFocus}" ToolTip="{Binding TemplatePath}" VerticalAlignment="Center"  />
                 <Button Grid.Column="2" Grid.Row="0" Content="Vorlage auswählen" Margin="5" Padding="4" Command="{Binding ButtonSelectTemplateClickCommand}"/>
                 <Image Grid.Column="3" Grid.Row="0" Height="40" Width="50" Source="Icons/check.png">
@@ -59,7 +60,7 @@
                     </Image.Style>
                 </Image>
 
-                <TextBlock Grid.Row="1" Text="Ordner auswählen: " Style="{StaticResource textBlockDescriptionStyle}"/>
+                <TextBlock Grid.Row="1" Text="Ordner mit PowerPoint-Präsentationen auswählen: " Style="{StaticResource textBlockDescriptionStyle}"/>
                 <TextBox Grid.Column="1" Grid.Row="1"  Text="{Binding FolderPath, Mode=TwoWay,UpdateSourceTrigger=LostFocus}" ToolTip="{Binding FolderPath}" VerticalAlignment="Center" />
                 <Button Grid.Column="2" Grid.Row="1" Content="Ordner auswählen" Margin="5" Padding="4" Command="{Binding ButtonSelectFolderClickCommand}" />
                 <Image Grid.Column="3" Grid.Row="1" Height="40" Width="50" Source="Icons/check.png">
@@ -75,7 +76,7 @@
                     </Image.Style>
                 </Image>
 
-                <TextBlock Grid.Row="2" Text="Dateien auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
+                <TextBlock Grid.Row="2" Text="Zu verarbeitende Module auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
                 <ListView Grid.Row="3" Grid.ColumnSpan="3" Margin="5" ItemsSource="{Binding PowerPointPresentations}" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -139,7 +140,7 @@
                 <Button Grid.Column="2" Grid.Row="6" Content="Reset" Margin="5" Padding="4" Command="{Binding ButtonResetClickCommand}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="7" Text="Fortschritt:" Style="{StaticResource textBlockDescriptionStyle}"/>
-                <ProgressBar x:Name="progressBarGeneratorProgress" Height="10" Margin="5" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="7" Minimum="0" Maximum="{Binding GeneratorProgressMaximum, Mode=OneWay}" Value="{Binding GeneratorProgressValue, Mode=OneWay}">
+                <ProgressBar x:Name="progressBarGeneratorProgress" Height="10" Margin="5" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="8" Minimum="0" Maximum="{Binding GeneratorProgressMaximum, Mode=OneWay}" Value="{Binding GeneratorProgressValue, Mode=OneWay}">
                     <ProgressBar.Style>
                         <Style TargetType="ProgressBar">
                             <Style.Triggers>
@@ -151,7 +152,7 @@
                     </ProgressBar.Style>
                 </ProgressBar>
 
-                <TextBlock x:Name="textBlockProgress" Grid.Column="3" Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock x:Name="textBlockProgress" Grid.Column="5" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock.Text>
                         <MultiBinding StringFormat="{}{0} / {1}">
                             <Binding ElementName="progressBarGeneratorProgress" Path="Value" />
