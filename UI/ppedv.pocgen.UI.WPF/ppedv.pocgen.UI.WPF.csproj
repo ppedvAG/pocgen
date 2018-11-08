@@ -35,8 +35,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.Microsoft.Office.Interop.PowerPoint">
+      <HintPath>..\..\Logic\ppedv.pocgen.Logic\bin\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.PowerPoint.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.Microsoft.Office.Interop.Word">
+      <HintPath>..\..\Logic\ppedv.pocgen.Logic\bin\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.Word.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -63,6 +77,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Helpers\ButtonStartEnabledConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -86,6 +101,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -93,6 +109,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\check.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\ppedv.pocgen.Domain\ppedv.pocgen.Domain.csproj">
+      <Project>{3101baf8-99ca-497c-bcd8-f788f0b3b5b2}</Project>
+      <Name>ppedv.pocgen.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Logic\ppedv.pocgen.Logic\ppedv.pocgen.Logic.csproj">
+      <Project>{694a5f61-d2ef-4c87-833f-e02682a9cd37}</Project>
+      <Name>ppedv.pocgen.Logic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ppedv.pocgen.UI.ViewModels\ppedv.pocgen.UI.ViewModels.csproj">
+      <Project>{fcd0bb9f-2cdc-4517-a257-3fd04f92f95f}</Project>
+      <Name>ppedv.pocgen.UI.ViewModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

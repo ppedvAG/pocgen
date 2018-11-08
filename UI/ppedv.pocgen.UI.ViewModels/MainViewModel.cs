@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using ppedv.pocgen.Domain.Interfaces;
+using ppedv.pocgen.Domain.Models;
 using ppedv.pocgen.Logic;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,11 @@ namespace ppedv.pocgen.UI.ViewModels
 
             this.wordFileOpener = new WordDocumentOpener(wordInstance, new string[] { ".doc", ".docx", ".dot", ".dotx" });
             this.powerPointFileOpener = new PowerPointPresentationOpener(new string[] { ".ppt", ".pptx" });
-            this.GeneratorOptions = new ObservableCollection<IGeneratorOption>(GeneratorOptions);
+            this.GeneratorOptions = new ObservableCollection<IGeneratorOption>
+            {
+                new GeneratorOption("ISBeakAtStart","Seitenumbruch beim Anfang einer Reihe von Bilderfolien"),
+                new GeneratorOption("ISBreakBetween","Seitenumbrich zwischen einzelnen Bilderfolien"),
+            };
             this.generator = new Generator(powerPointFileOpener, new FieldFiller());
             this.outputDocument = new WordDocument(wordInstance.Documents.Add());
 
@@ -246,6 +251,7 @@ namespace ppedv.pocgen.UI.ViewModels
                             .Select(x => x.FileName), templateForOutputDocument, outputDocument, GeneratorOptions);
                     Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Finish");
                     UIElementsEnabled = true;
+                    wordInstance.Visible = true; //TODO: -??
                 });
                 return buttonStartClickCommand;
             }
