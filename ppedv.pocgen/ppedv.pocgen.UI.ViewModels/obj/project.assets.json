@@ -25,6 +25,16 @@
         "build": {
           "build/netstandard2.0/NETStandard.Library.targets": {}
         }
+      },
+      "ppedv.pocgen.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/ppedv.pocgen.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ppedv.pocgen.Domain.dll": {}
+        }
       }
     }
   },
@@ -168,11 +178,17 @@
         "netstandard.library.2.0.3.nupkg.sha512",
         "netstandard.library.nuspec"
       ]
+    },
+    "ppedv.pocgen.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Domain/ppedv.pocgen.Domain/ppedv.pocgen.Domain.csproj",
+      "msbuildProject": "../Domain/ppedv.pocgen.Domain/ppedv.pocgen.Domain.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
-      "NETStandard.Library >= 2.0.3"
+      "NETStandard.Library >= 2.0.3",
+      "ppedv.pocgen.Domain >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -204,7 +220,11 @@
       },
       "frameworks": {
         "netstandard2.0": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Michael Zöhling\\Source\\Repos\\pocgen\\ppedv.pocgen\\Domain\\ppedv.pocgen.Domain\\ppedv.pocgen.Domain.csproj": {
+              "projectPath": "C:\\Users\\Michael Zöhling\\Source\\Repos\\pocgen\\ppedv.pocgen\\Domain\\ppedv.pocgen.Domain\\ppedv.pocgen.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

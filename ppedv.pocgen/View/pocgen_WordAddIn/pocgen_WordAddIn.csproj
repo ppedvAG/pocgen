@@ -239,10 +239,6 @@
     <Content Include="Icons\logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ViewModels\ViewModel\ViewModel.csproj">
-      <Project>{2A4A2115-BE9D-472E-A666-C7BC0AD1FCFF}</Project>
-      <Name>ViewModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Controls\Controls.csproj">
       <Project>{7B9CC3C7-7787-40E4-BFE6-411BDE0D227B}</Project>
       <Name>Controls</Name>

@@ -89,12 +89,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ViewModels\ViewModel\ViewModel.csproj">
-      <Project>{2A4A2115-BE9D-472E-A666-C7BC0AD1FCFF}</Project>
-      <Name>ViewModel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\check.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

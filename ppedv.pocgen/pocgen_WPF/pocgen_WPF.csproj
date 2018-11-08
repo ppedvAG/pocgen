@@ -136,12 +136,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ViewModels\ViewModel\ViewModel.csproj">
-      <Project>{2a4a2115-be9d-472e-a666-c7bc0ad1fcff}</Project>
-      <Name>ViewModel</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <Resource Include="Icons\check.png" />
