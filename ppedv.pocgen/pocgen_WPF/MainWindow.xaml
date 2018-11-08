@@ -4,9 +4,257 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:pocgen_WPF"
+        xmlns:helpers="clr-namespace:pocgen_WPF.Helpers"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <TabControl>
+        <TabItem Header="Generator">
+            <Grid IsEnabled="{Binding UIElementsEnabled}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition MinWidth="250" Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <helpers:ButtonStartEnabledConverter x:Key="buttonStartEnabledConverter"/>
+                    <Style TargetType="TextBlock" x:Key="textBlockDescriptionStyle">
+                        <Setter Property="Margin" Value="5,0"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                </Grid.Resources>
+
+                <TextBlock Grid.Row="0" Text="Vorlage auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
+                <TextBox Grid.Column="1" Grid.Row="0"  Text="{Binding TemplatePath, Mode=TwoWay,UpdateSourceTrigger=LostFocus}" ToolTip="{Binding TemplatePath}" VerticalAlignment="Center"  />
+                <Button Grid.Column="2" Grid.Row="0" Content="Vorlage auswählen" Margin="5" Padding="4" Command="{Binding ButtonSelectTemplateClickCommand}"/>
+                <Image Grid.Column="3" Grid.Row="0" Height="40" Width="50" Source="Icons/check.png">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsValidTemplateSelected}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+
+                <TextBlock Grid.Row="1" Text="Ordner auswählen: " Style="{StaticResource textBlockDescriptionStyle}"/>
+                <TextBox Grid.Column="1" Grid.Row="1"  Text="{Binding FolderPath, Mode=TwoWay,UpdateSourceTrigger=LostFocus}" ToolTip="{Binding FolderPath}" VerticalAlignment="Center" />
+                <Button Grid.Column="2" Grid.Row="1" Content="Ordner auswählen" Margin="5" Padding="4" Command="{Binding ButtonSelectFolderClickCommand}" />
+                <Image Grid.Column="3" Grid.Row="1" Height="40" Width="50" Source="Icons/check.png">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsValidFolderSelected}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+
+                <TextBlock Grid.Row="2" Text="Dateien auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
+                <ListView Grid.Row="3" Grid.ColumnSpan="3" Margin="5" ItemsSource="{Binding PowerPointPresentations}" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid  ToolTip="{Binding LayoutDescription}" ToolTipService.ShowOnDisabled="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox IsChecked="{Binding IsIncluded}" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Label Content="{Binding FileName}"  Grid.Column="1"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.ColumnSpan="4" Margin="0,10">
+                    <Button Content="Alle auswählen" Command="{Binding ButtonSelectAllPresentationsClickCommand}" Margin="5,0,20,0" Padding="4" />
+                    <Button Content="Alle abwählen" Command="{Binding ButtonUnselectAllPresentationsClickCommand}" Margin="20,0" Padding="4" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="3">
+                    <TextBlock Text="Optionen: " Style="{StaticResource textBlockDescriptionStyle}"/>
+                    <Expander Margin="5,0,5,0" >
+                        <ListView ItemsSource="{Binding GeneratorOptions}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <Label Grid.Column="1"  Content="{Binding Description}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Expander>
+                </StackPanel>
+
+                <Button Grid.Column="0" Grid.Row="6" Content="Start" Margin="5" Padding="4" Command="{Binding ButtonStartClickCommand}" >
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Style.Triggers>
+                                <DataTrigger Value="True">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource buttonStartEnabledConverter}">
+                                            <Binding Path="IsValidTemplateSelected"/>
+                                            <Binding Path="IsValidFolderSelected"/>
+                                            <Binding ElementName="progressBarGeneratorProgress" Path="IsIndeterminate"/>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Grid.Column="2" Grid.Row="6" Content="Reset" Margin="5" Padding="4" Command="{Binding ButtonResetClickCommand}" />
+
+                <TextBlock Grid.Column="0" Grid.Row="7" Text="Fortschritt:" Style="{StaticResource textBlockDescriptionStyle}"/>
+                <ProgressBar x:Name="progressBarGeneratorProgress" Height="10" Margin="5" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="7" Minimum="0" Maximum="{Binding GeneratorProgressMaximum, Mode=OneWay}" Value="{Binding GeneratorProgressValue, Mode=OneWay}">
+                    <ProgressBar.Style>
+                        <Style TargetType="ProgressBar">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=textBlockProgress, Path=Visibility}" Value="Hidden">
+                                    <Setter Property="IsIndeterminate" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ProgressBar.Style>
+                </ProgressBar>
+
+                <TextBlock x:Name="textBlockProgress" Grid.Column="3" Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} / {1}">
+                            <Binding ElementName="progressBarGeneratorProgress" Path="Value" />
+                            <Binding ElementName="progressBarGeneratorProgress" Path="Maximum" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="0 / 0">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Log">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Text="Datum:" Margin="0,5,0,5"/>
+                <TextBox Grid.Column="1" Margin="10,5,0,5" Text="{Binding DateFilter,UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction Command="{Binding FilterTextChangedCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Message:" Margin="0,5,0,5"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5,0,5" Text="{Binding MessageFilter,UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction Command="{Binding FilterTextChangedCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Klasse/Steuerelement:" Margin="0,5,0,5"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Margin="10,5,0,5" Text="{Binding ClassFilter,UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction Command="{Binding FilterTextChangedCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Member:" Margin="0,5,0,5"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Margin="10,5,0,5" Text="{Binding MemberFilter,UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction Command="{Binding FilterTextChangedCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" ItemsSource="{Binding UILog}">
+                    <ListView.Resources>
+                        <DataTemplate x:Key="DefaultItemTemplate">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Time, StringFormat='G'}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Message}" Margin="10,0,10,0"/>
+                            </Grid>
+                        </DataTemplate>
+                        <DataTemplate x:Key="SelectedItemTemplate">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Time, StringFormat='G'}"/>
+                                <TextBlock Grid.Row="1"  Text="{Binding ClassName, StringFormat='Class/UIElement: {0}'}"/>
+                                <TextBlock Grid.Row="2"  Text="{Binding MemberName, StringFormat='Member: {0}'}"/>
+                                <TextBlock Grid.Row="3"  Text="{Binding Message, StringFormat='Message: {0}'}"/>
+                            </Grid>
+                        </DataTemplate>
+
+                    </ListView.Resources>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Margin" Value="0,2,0,2" />
+                            <Setter Property="Padding" Value="0,2,0,2" />
+                            <Setter Property="ContentTemplate" Value="{StaticResource DefaultItemTemplate}" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource SelectedItemTemplate}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+                <Button Grid.Column="0" Grid.Row="5" Content="Export Log to .csv" Command="{Binding ExportLogCommand}" Margin="10"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>
