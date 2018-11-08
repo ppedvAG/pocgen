@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{995A8719-415E-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.pocgen.Domain", "Domain\ppedv.pocgen.Domain\ppedv.pocgen.Domain.csproj", "{3101BAF8-99CA-497C-BCD8-F788F0B3B5B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.pocgen.Logic", "Logic\ppedv.pocgen.Logic\ppedv.pocgen.Logic.csproj", "{694A5F61-D2EF-4C87-833F-E02682A9CD37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,12 +47,17 @@ Global
 		{3101BAF8-99CA-497C-BCD8-F788F0B3B5B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3101BAF8-99CA-497C-BCD8-F788F0B3B5B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3101BAF8-99CA-497C-BCD8-F788F0B3B5B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{694A5F61-D2EF-4C87-833F-E02682A9CD37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{694A5F61-D2EF-4C87-833F-E02682A9CD37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{694A5F61-D2EF-4C87-833F-E02682A9CD37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{694A5F61-D2EF-4C87-833F-E02682A9CD37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3101BAF8-99CA-497C-BCD8-F788F0B3B5B2} = {18D14F95-DEDC-4238-AD1C-737CE0B51C72}
+		{694A5F61-D2EF-4C87-833F-E02682A9CD37} = {6D18DF2A-4D3D-4B1E-9721-786F70B74397}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4DC29C5-F7FC-4CEB-9BC7-9324AEE7B62F}
