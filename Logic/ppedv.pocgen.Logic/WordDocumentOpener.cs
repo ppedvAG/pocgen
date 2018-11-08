@@ -13,12 +13,12 @@ namespace ppedv.pocgen.Logic
 {
     public class WordDocumentOpener : IOfficeFileOpener<WordDocument>
     {
-        private readonly Application application;
-        public WordDocumentOpener(Application application, string[] ValidExtensions)
+        public WordDocumentOpener(string[] ValidExtensions)
         {
-            this.application = application;
+            this.application = new Application();
             this.ValidExtensions = ValidExtensions ?? new string[] { ".doc", ".docx" };
         }
+        private Application application;
         public string[] ValidExtensions { get; }
 
         public WordDocument OpenFile(string fileName)
@@ -29,6 +29,13 @@ namespace ppedv.pocgen.Logic
                 throw new System.IO.FileNotFoundException("Die angegebene Word-Datei wurde nicht gefunden.", fileName);
             }
             return new WordDocument(application.Documents.Open(fileName, Visible: false));
+        }
+
+        public void Dispose()
+        {
+            application?.Quit();
+            application = null;
+            MessagingCenter.Send(this, "Log", new LoggerEventArgs(GetType().Name, MethodBase.GetCurrentMethod().Name, $"PowerPointPresentationOpener: disposed"));
         }
     }
 }
