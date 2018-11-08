@@ -1,0 +1,9 @@
+C:\Users\Michael Zöhling\source\repos\pocgen\ppedv.pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\netstandard2.0\ppedv.pocgen.UI.ViewModels.deps.json
+C:\Users\Michael Zöhling\source\repos\pocgen\ppedv.pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\netstandard2.0\ppedv.pocgen.UI.ViewModels.dll
+C:\Users\Michael Zöhling\source\repos\pocgen\ppedv.pocgen\UI\ppedv.pocgen.UI.ViewModels\bin\Debug\netstandard2.0\ppedv.pocgen.UI.ViewModels.pdb
+C:\Users\Michael Zöhling\source\repos\pocgen\ppedv.pocgen\UI\ppedv.pocgen.UI.ViewModels\obj\Debug\netstandard2.0\ppedv.pocgen.UI.ViewModels.csprojAssemblyReference.cache
+C:\Users\Michael Zöhling\source\repos\pocgen\ppedv.pocgen\UI\ppedv.pocgen.UI.ViewModels\obj\Debug\netstandard2.0\ppedv.pocgen.UI.ViewModels.csproj.CoreCompileInputs.cache
+C:\Users\Michael Zöhling\source\repos\pocgen\ppedv.pocgen\UI\ppedv.pocgen.UI.ViewModels\obj\Debug\netstandard2.0\ppedv.pocgen.UI.ViewModels.AssemblyInfoInputs.cache
+C:\Users\Michael Zöhling\source\repos\pocgen\ppedv.pocgen\UI\ppedv.pocgen.UI.ViewModels\obj\Debug\netstandard2.0\ppedv.pocgen.UI.ViewModels.AssemblyInfo.cs
+C:\Users\Michael Zöhling\source\repos\pocgen\ppedv.pocgen\UI\ppedv.pocgen.UI.ViewModels\obj\Debug\netstandard2.0\ppedv.pocgen.UI.ViewModels.dll
+C:\Users\Michael Zöhling\source\repos\pocgen\ppedv.pocgen\UI\ppedv.pocgen.UI.ViewModels\obj\Debug\netstandard2.0\ppedv.pocgen.UI.ViewModels.pdb
