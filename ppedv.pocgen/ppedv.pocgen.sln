@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.pocgen.Logic", "Logic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.pocgen.UI.ViewModels", "ppedv.pocgen.UI.ViewModels\ppedv.pocgen.UI.ViewModels.csproj", "{B8304ADB-B87C-4E63-932B-8307A3EC176B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.pocgen.UI.WPF", "UI\ppedv.pocgen.UI.WPF\ppedv.pocgen.UI.WPF.csproj", "{D3CC57D1-22E7-4EB8-ADCE-77BE4780959B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{B8304ADB-B87C-4E63-932B-8307A3EC176B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8304ADB-B87C-4E63-932B-8307A3EC176B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8304ADB-B87C-4E63-932B-8307A3EC176B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3CC57D1-22E7-4EB8-ADCE-77BE4780959B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3CC57D1-22E7-4EB8-ADCE-77BE4780959B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3CC57D1-22E7-4EB8-ADCE-77BE4780959B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3CC57D1-22E7-4EB8-ADCE-77BE4780959B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{3101BAF8-99CA-497C-BCD8-F788F0B3B5B2} = {18D14F95-DEDC-4238-AD1C-737CE0B51C72}
 		{694A5F61-D2EF-4C87-833F-E02682A9CD37} = {6D18DF2A-4D3D-4B1E-9721-786F70B74397}
 		{B8304ADB-B87C-4E63-932B-8307A3EC176B} = {995A8719-415E-46F1-BCE7-44E3676AE8A4}
+		{D3CC57D1-22E7-4EB8-ADCE-77BE4780959B} = {995A8719-415E-46F1-BCE7-44E3676AE8A4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4DC29C5-F7FC-4CEB-9BC7-9324AEE7B62F}
