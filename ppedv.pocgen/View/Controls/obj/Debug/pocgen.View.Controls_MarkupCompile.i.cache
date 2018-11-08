@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\Michael Zöhling\source\pocgen\ppedv.pocgen\View\Controls\obj\Debug\
+C:\Users\Michael Zöhling\Source\Repos\pocgen\ppedv.pocgen\View\Controls\obj\Debug\
 pocgen.View.Controls
 none
 false
@@ -13,8 +13,8 @@ DEBUG;TRACE
 1215629954
 
 9-1535244408
-19214780276
+18337180930
 MainViewControl.xaml;
 
-False
+True
 

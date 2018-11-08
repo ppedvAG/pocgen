@@ -89,10 +89,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Contracts\Models\Models.csproj">
-      <Project>{5278E6B1-9513-4429-8553-5892798D8C04}</Project>
-      <Name>Models</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ViewModels\ViewModel\ViewModel.csproj">
       <Project>{2A4A2115-BE9D-472E-A666-C7BC0AD1FCFF}</Project>
       <Name>ViewModel</Name>

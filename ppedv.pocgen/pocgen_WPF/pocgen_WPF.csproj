@@ -137,14 +137,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Contracts\Interfaces\Interfaces.csproj">
-      <Project>{dedc3727-c205-42fb-9512-c99ba32a12b1}</Project>
-      <Name>Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Contracts\Models\Models.csproj">
-      <Project>{5278e6b1-9513-4429-8553-5892798d8c04}</Project>
-      <Name>Models</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ViewModels\ViewModel\ViewModel.csproj">
       <Project>{2a4a2115-be9d-472e-a666-c7bc0ad1fcff}</Project>
       <Name>ViewModel</Name>

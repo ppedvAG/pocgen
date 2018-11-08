@@ -1,4 +1,4 @@
-﻿namespace pocgen.Contracts.Interfaces
+﻿namespace ppedv.pocgen.Domain.Interfaces
 {
     public interface IGeneratorEventArgs
     {
