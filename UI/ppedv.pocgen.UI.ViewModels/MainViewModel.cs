@@ -38,12 +38,10 @@ namespace ppedv.pocgen.UI.ViewModels
         }
         ~MainViewModel()
         {
-            templateForOutputDocument?.Dispose();
             wordFileOpener?.Dispose();
             powerPointFileOpener?.Dispose();
         }
 
-        private IWordDocument templateForOutputDocument;
         private readonly IGenerator generator;
         private readonly IOfficeFileOpener<IWordDocument> wordFileOpener;
         private readonly IOfficeFileOpener<IPowerPointPresentation> powerPointFileOpener;
@@ -90,10 +88,8 @@ namespace ppedv.pocgen.UI.ViewModels
                 }
                 if (SetValue(ref templatePath, value))
                 {
-                    templateForOutputDocument?.Dispose(); // Falls schon eins offen sein sollte und ein neues gewählt wird
                     if (wordFileOpener.ValidExtensions.Contains(Path.GetExtension(value)) && File.Exists(value))
                     {
-                        templateForOutputDocument = wordFileOpener.OpenFile(value);
                         IsValidTemplateSelected = true;
                         Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Valid TemplatePath selected");
                     }
@@ -242,14 +238,17 @@ namespace ppedv.pocgen.UI.ViewModels
                     Task.Run(() =>
                     {
                         var wordInstance = new Word.Application();
+                        var templateForOutputDocument = wordFileOpener.OpenFile(TemplatePath);
                         var outputDocument = new WordDocument(wordInstance.Documents.Add());
                         UIElementsEnabled = false;
                         Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Start");
+
                         generator.GenerateDocument(PowerPointPresentations
                                 .Where(x => x.IsIncluded)
                                 .Select(x => x.FileName), templateForOutputDocument, outputDocument, GeneratorOptions);
                         Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Finish");
                         UIElementsEnabled = true;
+                        templateForOutputDocument.Dispose();
                         wordInstance.Visible = true;
                     });
                 });
@@ -277,8 +276,6 @@ namespace ppedv.pocgen.UI.ViewModels
 
                     foreach (IGeneratorOption option in GeneratorOptions)
                         option.IsEnabled = false;
-
-                    templateForOutputDocument?.Dispose();
                 });
                 return buttonResetClickCommand;
             }

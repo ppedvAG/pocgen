@@ -32,8 +32,6 @@ namespace ppedv.pocgen.Logic
         public void GenerateDocument(IEnumerable<string> usedPowerPointPresentations, IWordDocument templateForOutputDocument, IWordDocument outputDocument, ICollection<IGeneratorOption> generatorOptions)
         {
             bool isFirstModule = true;
-            bool isTitleText = true;
-
             int totalSlidesDone = 0;
             GeneratorProgressChanged?.Invoke(this, new GeneratorEventArgs(totalSlidesDone));
 
@@ -59,14 +57,17 @@ namespace ppedv.pocgen.Logic
                     {
                         case SlideType.Title:
                             #region Kurs und Modulinformationen für den Header zwischenspeichern
-                            if (isFirstModule && isTitleText) // Modul00 - Titeltext
+                            if (isFirstModule && currentSlideNumber == 1) // Modul00 - Titeltext
                             {
-                                courseInfo.CourseName = GetTitleTextFromFirstSlideInPresentation(presentation);
+                                courseInfo.CourseName = GetTitleTextFromSlideInPresentation(presentation,currentSlideNumber).Replace('–', '-').Replace('—', '-'); // Powerpoint macht aus einem Bindestrich oftmals ein En-Dash oder Em-Dash -> Vergleichsfehler
                                 Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] got courseInfo from first slide in {pathToPowerPointPresentation}");
                             }
-                            else if (!isFirstModule && isTitleText) // ModulXX - Titeltext
+                            else // ModulXX - Titeltext
                             {
-                                courseInfo.CourseCurrentModuleName = GetTitleTextFromFirstSlideInPresentation(presentation);
+                                if(currentSlideNumber != 1) // Neue pptx -> keine doppelter Seitenumbruch
+                                    outputDocument.Range(outputDocumentStartOfCurentPage, outputDocumentStartOfCurentPage).InsertBreak(WdBreakType.wdPageBreak);
+                                JumpToLastPositionInDocumentAndSetCursor(outputDocument);
+                                courseInfo.CourseCurrentModuleName = GetTitleTextFromSlideInPresentation(presentation,currentSlideNumber).Replace('–','-').Replace('—','-'); // Powerpoint macht aus einem Bindestrich oftmals ein En-Dash oder Em-Dash -> Vergleichsfehler
                                 Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] got current module name from first slide in {pathToPowerPointPresentation}");
                             }
                             #endregion
@@ -144,9 +145,9 @@ namespace ppedv.pocgen.Logic
             Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] All Fields for slide {currentSlideNumber} filled");
         }
 
-        private static string GetTitleTextFromFirstSlideInPresentation(IPowerPointPresentation presentation)
+        private static string GetTitleTextFromSlideInPresentation(IPowerPointPresentation presentation,int slide)
         {
-            foreach (Microsoft.Office.Interop.PowerPoint.Shape shape in presentation.Slides[1].Shapes)
+            foreach (Microsoft.Office.Interop.PowerPoint.Shape shape in presentation.Slides[slide].Shapes)
             {
                 if (shape.HasTextFrame == MsoTriState.msoTrue && shape.TextFrame.HasText == MsoTriState.msoTrue)
                 {

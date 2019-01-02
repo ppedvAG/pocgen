@@ -27,27 +27,23 @@ namespace ppedv.pocgen.Logic
             string fieldName = field.Code.Text.Trim();
             switch (fieldName)
             {
-                case ("Überschrift"):
-                    string title = (correspondingSlide.Shapes.HasTitle == MsoTriState.msoTrue)
-                        ? correspondingSlide.Shapes.Title.TextFrame.TextRange.Text : string.Empty;
-                    if (!string.IsNullOrWhiteSpace(title))
-                    {
-                        field.Result.Text = $"{correspondingSlide.Shapes.Title.TextEffect.Text}";
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}'");
-                    }
+                case "Überschrift":
+                    string title = (correspondingSlide.Shapes.HasTitle == MsoTriState.msoTrue) ? correspondingSlide.Shapes.Title.TextFrame.TextRange.Text : string.Empty;
+                    field.Result.Text = string.IsNullOrWhiteSpace(title) ? string.Empty : $"{correspondingSlide.Shapes.Title.TextEffect.Text}";
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}'");
                     field.Unlink();
                     break;
-                case ("Inhalt"):
-                    string slidetitle = (correspondingSlide.Shapes.HasTitle == MsoTriState.msoTrue)
-                        ? correspondingSlide.Shapes.Title.TextFrame.TextRange.Text : string.Empty;
+                case "Inhalt":
+                    string slidetitle = (correspondingSlide.Shapes.HasTitle == MsoTriState.msoTrue) ? correspondingSlide.Shapes.Title.TextFrame.TextRange.Text : string.Empty;
                     for (int i = 1; i <= correspondingSlide.Shapes.Count; i++) //TODO: Inhalt-VERKEHRTHERUM-Fehler: falls der wieder kommen sollte nach meinem Refactoring, hier nachschauen !
                     {
                         if (correspondingSlide.Shapes[i].HasTextFrame == MsoTriState.msoTrue &&
                             correspondingSlide.Shapes[i].TextFrame.HasText == MsoTriState.msoTrue &&
-                            correspondingSlide.Shapes[i].TextFrame.TextRange.Text != slidetitle &&
+                            !correspondingSlide.Shapes[i].TextFrame.TextRange.Text.Equals(slidetitle,StringComparison.InvariantCultureIgnoreCase)  &&
+                            !correspondingSlide.Shapes[i].TextFrame.TextRange.Text.Replace('–', '-').Replace('—', '-').Equals(courseInfo.CourseCurrentModuleName,StringComparison.InvariantCultureIgnoreCase) &&
                             !Regex.IsMatch(correspondingSlide.Shapes[i].TextFrame.TextRange.Text, @"^\d+$"))
                         {
-                            int maxTries = 3;
+                            int maxtries = 3;
                             bool gotAnException = false;
                             do
                             {
@@ -60,9 +56,10 @@ namespace ppedv.pocgen.Logic
                                 catch (Exception)
                                 {
                                     gotAnException = true;
-                                    if (--maxTries == 0)
+                                    if (--maxtries == 0)
                                     {
                                         Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] ERROR: Field '{fieldName}' could not paste Content");
+                                        field.Result.Text = string.Empty; // Behebt "Fehler ! Textmarke nicht definiert."
                                         field.Unlink();
                                         return;
                                     }
@@ -70,10 +67,11 @@ namespace ppedv.pocgen.Logic
                             } while (gotAnException);
                         }
                     }
+                    field.Result.Text = string.Empty; // Behebt "Fehler ! Textmarke nicht definiert."
                     field.Unlink();
                     Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}' with content from slide");
                     break;
-                case ("Notiz"):
+                case "Notiz":
                     string notesInSlide = string.Empty;
                     if (correspondingSlide.NotesPage.Shapes?.Count >= 3) // Die Notizen sind immer im NotesPage.Shapes[2] drinnen !
                     {
@@ -93,33 +91,33 @@ namespace ppedv.pocgen.Logic
                     if (!string.IsNullOrWhiteSpace(notesInSlide)) // Wenn Notizen vorhanden sind -> Notizen ausgeben
                     {
                         field.Result.Text = notesInSlide; // -> Notizen 1:1 in Word übertragen
-                        field.Result.Paste();
                         Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}' with notes");
                     }
-                    //TODO: Feature-Request Hannes: Wenn keine Notizen vorhanden sind, dann soll der Inhalt der Folie in das Notizenfelder der pptx eingetragen und gespeichert werden
+                    else
+                        goto case "Inhalt";
                     field.Unlink();
                     break;
-                case ("Kursname"):
+                case "Kursname":
                     field.Result.Text = courseInfo.CourseName;
                     field.Unlink();
                     Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}'");
                     break;
-                case ("Modul"):
+                case "Modul":
                     field.Result.Text = courseInfo.CourseCurrentModuleName;
                     field.Unlink();
                     Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}'");
                     break;
-                case ("Copyright"):
+                case "Copyright":
                     field.Result.Text = "ppedv AG";
                     field.Unlink();
                     Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully filled Field '{fieldName}'");
                     break;
-                case ("Seite"):
+                case "Seite":
                     field.Code.Text = " Page"; // Page ist Feldfunktion, daher kein Unlink !
                     Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Successfully changed Field '{fieldName}' to '{field.Code.Text}'");
                     break;
-                case ("Slide"):
-                    int maxtries = 3;
+                case "Slide":
+                    int maxTries = 3;
                     bool gotException = false;
                     do
                     {
@@ -132,7 +130,7 @@ namespace ppedv.pocgen.Logic
                         catch (Exception)
                         {
                             gotException = true;
-                            if (--maxtries == 0)
+                            if (--maxTries == 0)
                             {
                                 Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] ERROR: Field '{fieldName}' could not be filled with screenshot");
                                 field.Unlink();

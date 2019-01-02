@@ -48,7 +48,7 @@ namespace ppedv.pocgen.Logic
             switch (presentation.Slides[pageNumber].Layout)
             {
                 case PpSlideLayout.ppLayoutTitle: // Erste Seite -> Titelfolie, jede andere: Modultitelfolie
-                    return (pageNumber == 1) ? SlideType.Title : SlideType.Slide;
+                    return SlideType.Title;
                 case PpSlideLayout.ppLayoutText:
                 case PpSlideLayout.ppLayoutSectionHeader:
                 case PpSlideLayout.ppLayoutComparison:
