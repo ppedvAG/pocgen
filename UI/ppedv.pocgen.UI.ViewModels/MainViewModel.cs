@@ -26,7 +26,7 @@ namespace ppedv.pocgen.UI.ViewModels
             this.GeneratorOptions = new ObservableCollection<IGeneratorOption>
             {
                 new GeneratorOption("ISBeakAtStart","Seitenumbruch beim Anfang einer Reihe von Bilderfolien"),
-                new GeneratorOption("ISBreakBetween","Seitenumbrich zwischen einzelnen Bilderfolien"),
+                new GeneratorOption("ISBreakBetween","Seitenumbruch zwischen einzelnen Bilderfolien"),
             };
             this.generator = new Generator(powerPointFileOpener, new FieldFiller());
 
