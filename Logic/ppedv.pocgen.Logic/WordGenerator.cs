@@ -114,7 +114,6 @@ namespace ppedv.pocgen.Logic
         }
 
 
-
         private SlidePart GetSlidePart(PresentationDocument presentationDocument, int slideIndex)
         {
             if (slideIndex < 0)
@@ -269,6 +268,5 @@ namespace ppedv.pocgen.Logic
 
             wordDoc.MainDocumentPart.Document.Body.AppendChild(p);
         }
-
     }
 }

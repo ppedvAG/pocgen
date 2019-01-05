@@ -25,7 +25,6 @@ namespace ppedv.pocgen.Logic
             int width = Convert.ToInt32(presentation.PageSetup.SlideWidth);
             for (int i = 0; i < presentation.Slides.Count; i++)
                 presentation.Slides[i + 1].Export($"{path}\\{i}.png", "PNG", width, height);
-            presentation.Close();
         }
         public void MergePresentationContentIntoNewPresentation(IEnumerable<string> sourceFiles, Presentation destination,int insertAtIndex)
         {

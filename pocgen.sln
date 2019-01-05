@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{995A8719-415E-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.pocgen.UI.WPF", "UI\ppedv.pocgen.UI.WPF\ppedv.pocgen.UI.WPF.csproj", "{D3CC57D1-22E7-4EB8-ADCE-77BE4780959B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.pocgen.UI.ViewModels", "UI\ppedv.pocgen.UI.ViewModels\ppedv.pocgen.UI.ViewModels.csproj", "{FCD0BB9F-2CDC-4517-A257-3FD04F92F95F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppedv.pocgen.Logic", "Logic\ppedv.pocgen.Logic\ppedv.pocgen.Logic.csproj", "{987CCDD2-7036-4D8F-80BF-0A7801D2CE42}"
 EndProject
 Global
@@ -23,10 +21,6 @@ Global
 		{D3CC57D1-22E7-4EB8-ADCE-77BE4780959B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3CC57D1-22E7-4EB8-ADCE-77BE4780959B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3CC57D1-22E7-4EB8-ADCE-77BE4780959B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FCD0BB9F-2CDC-4517-A257-3FD04F92F95F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FCD0BB9F-2CDC-4517-A257-3FD04F92F95F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FCD0BB9F-2CDC-4517-A257-3FD04F92F95F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FCD0BB9F-2CDC-4517-A257-3FD04F92F95F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{987CCDD2-7036-4D8F-80BF-0A7801D2CE42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{987CCDD2-7036-4D8F-80BF-0A7801D2CE42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{987CCDD2-7036-4D8F-80BF-0A7801D2CE42}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,7 +31,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D3CC57D1-22E7-4EB8-ADCE-77BE4780959B} = {995A8719-415E-46F1-BCE7-44E3676AE8A4}
-		{FCD0BB9F-2CDC-4517-A257-3FD04F92F95F} = {995A8719-415E-46F1-BCE7-44E3676AE8A4}
 		{987CCDD2-7036-4D8F-80BF-0A7801D2CE42} = {6D18DF2A-4D3D-4B1E-9721-786F70B74397}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
