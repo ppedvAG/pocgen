@@ -30,7 +30,7 @@
   },
   "libraries": {
     "Microsoft.NETCore.Platforms/1.1.0": {
-      "sha512": "bLpT1f/SFlO1CzqXG12KnJzpZs6lv24uX2Rzi4Fmm0noJpNlnWRVryuO3yK18Ca04t/YHcO1e1Z0WDfjseqNzw==",
+      "sha512": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
       "type": "package",
       "path": "microsoft.netcore.platforms/1.1.0",
       "files": [
@@ -184,11 +184,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Michael Zöhling\\Source\\Repos\\pocgen\\Domain\\ppedv.pocgen.Domain\\ppedv.pocgen.Domain.csproj",
+      "projectUniqueName": "C:\\Users\\Michael Zöhling\\source\\repos\\pocgen\\Domain\\ppedv.pocgen.Domain\\ppedv.pocgen.Domain.csproj",
       "projectName": "ppedv.pocgen.Domain",
-      "projectPath": "C:\\Users\\Michael Zöhling\\Source\\Repos\\pocgen\\Domain\\ppedv.pocgen.Domain\\ppedv.pocgen.Domain.csproj",
+      "projectPath": "C:\\Users\\Michael Zöhling\\source\\repos\\pocgen\\Domain\\ppedv.pocgen.Domain\\ppedv.pocgen.Domain.csproj",
       "packagesPath": "C:\\Users\\Michael Zöhling\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Michael Zöhling\\Source\\Repos\\pocgen\\Domain\\ppedv.pocgen.Domain\\obj\\",
+      "outputPath": "C:\\Users\\Michael Zöhling\\source\\repos\\pocgen\\Domain\\ppedv.pocgen.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
