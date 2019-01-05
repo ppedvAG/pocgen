@@ -139,3 +139,7 @@ C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\obj\Debug\p
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\office.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\stdole.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\office.xml
+C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\ppedv.pocgen.UI.WPF.exe.manifest
+C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\ppedv.pocgen.UI.WPF.application
+C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\obj\Debug\ppedv.pocgen.UI.WPF.exe.manifest
+C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\obj\Debug\ppedv.pocgen.UI.WPF.application
