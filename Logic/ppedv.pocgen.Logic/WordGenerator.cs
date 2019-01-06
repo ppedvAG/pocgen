@@ -113,7 +113,6 @@ namespace ppedv.pocgen.Logic
             styles.Append(style);
         }
 
-
         private SlidePart GetSlidePart(PresentationDocument presentationDocument, int slideIndex)
         {
             if (slideIndex < 0)

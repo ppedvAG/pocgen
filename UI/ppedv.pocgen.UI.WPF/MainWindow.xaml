@@ -13,7 +13,7 @@
         <vm:MainViewModel/>
     </Window.DataContext>
     <Window.Resources>
-        <helpers:ButtonStartEnabledConverter x:Key="buttonStartEnabledConverter"/>
+        <BooleanToVisibilityConverter x:Key="bool2vis"/>
         <Style TargetType="TextBlock" x:Key="textBlockDescriptionStyle">
             <Setter Property="Margin" Value="5,0"/>
             <Setter Property="FontSize" Value="40"/>
@@ -53,7 +53,7 @@
                 <EasingThicknessKeyFrame KeyTime="0:0:0.5" Value="0,500,0,0"/>
             </ThicknessAnimationUsingKeyFrames>
             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectPresentationFolder">
-                <EasingThicknessKeyFrame KeyTime="0:0:0.6" Value="0,500,0,0"/>
+                <EasingThicknessKeyFrame KeyTime="0:0:0.6" Value="0,0,0,0"/>
             </ThicknessAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="NavigateToModuleSelection">
@@ -123,17 +123,16 @@
                     </Grid.Background>
                     <StackPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <TextBlock HorizontalAlignment="Center" Text="Dateien auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
-                        <ListView ItemsSource="{Binding PowerPointPresentations}" Height="150" Opacity="0.8" >
+                        <ListView x:Name="listViewPresentations" ItemsSource="{Binding PowerPointPresentations}" Height="150" Opacity="0.8" >
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid ToolTip="{Binding LayoutDescription}" ToolTipService.ShowOnDisabled="True">
+                                    <Grid ToolTip="{Binding FullPath}" ToolTipService.ShowOnDisabled="True">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-
                                         <CheckBox IsChecked="{Binding IsIncluded}" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <Label Content="{Binding FullPath}"  Grid.Column="1"/>
+                                        <Label Content="{Binding FileName}"  Grid.Column="1"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -154,7 +153,7 @@
                                 </Button.Style>
                             </Button>
                         </StackPanel>
-                        <Button x:Name="buttonGoToGenerate"  Content="Weiter">
+                        <Button x:Name="buttonGoToGenerate"  Content="Weiter" Visibility="{Binding IsAtLeastOnePresentationSelected, Converter={StaticResource bool2vis},Mode=OneWay}">
                             <Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
                                     <Setter Property="Margin" Value="5"/>
@@ -180,7 +179,8 @@
                                 </Style>
                             </Button.Style>
                         </Button>
-                        <Button x:Name="buttonReset" Content="Reset" Command="{Binding ButtonResetClickCommand}" >
+
+                        <Button x:Name="buttonReset" Content="Zurück zum Anfang" Command="{Binding ButtonResetClickCommand}" >
                             <Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
                                     <Setter Property="Margin" Value="5"/>

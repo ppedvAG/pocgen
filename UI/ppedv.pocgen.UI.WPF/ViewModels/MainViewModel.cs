@@ -24,9 +24,10 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             UIElementsEnabled = true;
             PowerPointPresentations = new ObservableCollection<PowerPointPresentationItem>();
 
-            tempPath =  Path.Combine(Path.GetTempPath(),"pocgen");
+            tempPath = Path.Combine(Path.GetTempPath(), "pocgen");
             tempImagePath = Directory.CreateDirectory(Path.Combine(tempPath, "genSlides")).FullName;
         }
+
         private readonly string tempPath;
         private readonly string tempImagePath;
 
@@ -46,7 +47,15 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                 PowerPointPresentations.Clear();
 
                 foreach (var file in Directory.GetFiles(presentationRootFolderPath, "*.pptx", SearchOption.AllDirectories))
-                    PowerPointPresentations.Add(new PowerPointPresentationItem(file));
+                {
+                    var ppi = new PowerPointPresentationItem(file);
+                    ppi.PropertyChanged += (sender, e) =>
+                    {
+                        if (e.PropertyName == "IsIncluded")
+                            IsAtLeastOnePresentationSelected = PowerPointPresentations.Any(x => x.IsIncluded);
+                    };
+                    PowerPointPresentations.Add(ppi);
+                }
 
                 if (PowerPointPresentations.Count > 0)
                 {
@@ -66,6 +75,20 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
         {
             get => isValidFolderSelected;
             set => SetValue(ref isValidFolderSelected, value);
+        }
+
+        private bool isAtLeastOnePresentationSelected;
+        public bool IsAtLeastOnePresentationSelected
+        {
+            get => isAtLeastOnePresentationSelected;
+            set => SetValue(ref isAtLeastOnePresentationSelected, value);
+        }
+
+        private bool generatorIsWorking;
+        public bool GeneratorIsWorking
+        {
+            get => generatorIsWorking;
+            set => SetValue(ref generatorIsWorking, value);
         }
 
         private bool uiElementsEnabled;
@@ -112,37 +135,36 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             {
                 buttonStartClickCommand = buttonStartClickCommand ?? new RelayCommand(parameter =>
                 {
-                    Task.Run(() =>
+                    UIElementsEnabled = false;
+                    GeneratorIsWorking = true;
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Start");
+
+                    string tempPresentation = Path.Combine(tempPath, $"{Guid.NewGuid()}.pptx");
+                    string tempDocument = Path.Combine(tempPath, $"{Guid.NewGuid()}.docx");
+
+                    using (PowerPointHelper pph = new PowerPointHelper())
                     {
-                        UIElementsEnabled = false;
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Start");
+                        var mergedPresentation = pph.CreateNewPresentation(tempPresentation);
+                        pph.MergePresentationContentIntoNewPresentation(PowerPointPresentations.Where(x => x.IsIncluded).Select(x => x.FullPath), mergedPresentation);
+                        pph.ExportAllSlidesAsImage(mergedPresentation, tempImagePath);
+                        pph.SavePresentationAs(mergedPresentation, tempPresentation);
+                    }
 
-                        string tempPresentation = Path.Combine(tempPath, $"{Guid.NewGuid()}.pptx");
-                        string tempDocument = Path.Combine(tempPath, $"{Guid.NewGuid()}.docx");
+                    WordGenerator generator = new WordGenerator();
+                    generator.GeneratePOC_Document(tempPresentation, tempImagePath, tempDocument);
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Finish");
 
-                        using (PowerPointHelper pph = new PowerPointHelper())
-                        {
-                            var mergedPresentation = pph.CreateNewPresentation(tempPresentation);
-                            pph.MergePresentationContentIntoNewPresentation(PowerPointPresentations.Where(x => x.IsIncluded).Select(x => x.FullPath), mergedPresentation);
-                            pph.ExportAllSlidesAsImage(mergedPresentation, tempImagePath);
-                            pph.SavePresentationAs(mergedPresentation, tempPresentation);
-                        }
+                    SaveFileDialog dlg = new SaveFileDialog();
+                    dlg.Title = "POC Speichern unter";
+                    dlg.Filter = "Word Dokument | *.docx";
 
-                        WordGenerator generator = new WordGenerator();
-                        generator.GeneratePOC_Document(tempPresentation, tempImagePath, tempDocument);
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Finish");
+                    if (dlg.ShowDialog() == true)
+                    {
+                        File.Move(tempDocument, dlg.FileName);
+                    }
 
-                        SaveFileDialog dlg = new SaveFileDialog();
-                        dlg.Title = "POC Speichern unter";
-                        dlg.Filter = "Word Dokument | *.docx";
-
-                        if (dlg.ShowDialog() == true)
-                        {
-                            File.Move(tempDocument, dlg.FileName);
-                        }
-
-                        UIElementsEnabled = true;
-                    });
+                    UIElementsEnabled = true;
+                    GeneratorIsWorking = false;
                 });
                 return buttonStartClickCommand;
             }
