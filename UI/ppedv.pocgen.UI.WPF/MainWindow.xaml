@@ -6,14 +6,14 @@
         xmlns:local="clr-namespace:ppedv.pocgen.UI.WPF"
         xmlns:helpers="clr-namespace:ppedv.pocgen.UI.WPF.Helpers"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:vm="clr-namespace:ppedv.pocgen.UI.ViewModels;assembly=ppedv.pocgen.UI.ViewModels"
+        xmlns:vm="clr-namespace:ppedv.pocgen.UI.WPF.ViewModels"
         mc:Ignorable="d"
         Title="ppedv Kursgenerator" Height="500" Width="500" ResizeMode="NoResize" WindowStyle="ToolWindow">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
     <Window.Resources>
-        <helpers:ButtonStartEnabledConverter x:Key="buttonStartEnabledConverter"/>
+        <BooleanToVisibilityConverter x:Key="bool2vis"/>
         <Style TargetType="TextBlock" x:Key="textBlockDescriptionStyle">
             <Setter Property="Margin" Value="5,0"/>
             <Setter Property="FontSize" Value="40"/>
@@ -46,19 +46,18 @@
             </Style.Triggers>
         </Style>
         <Storyboard x:Key="NavigateToFolderSelection">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridGenerate">
+                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0,500,0,0"/>
+            </ThicknessAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectModules">
+                <EasingThicknessKeyFrame KeyTime="0:0:0.5" Value="0,500,0,0"/>
+            </ThicknessAnimationUsingKeyFrames>
             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectPresentationFolder">
-                <EasingThicknessKeyFrame KeyTime="0" Value="0,500,0,0"/>
-                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                <EasingThicknessKeyFrame KeyTime="0:0:0.6" Value="0,0,0,0"/>
             </ThicknessAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="NavigateToModuleSelection">
             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectModules">
-                <EasingThicknessKeyFrame KeyTime="0" Value="0,500,0,0"/>
-                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0"/>
-            </ThicknessAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Key="NavigateToOptions">
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectOptions">
                 <EasingThicknessKeyFrame KeyTime="0" Value="0,500,0,0"/>
                 <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0"/>
             </ThicknessAnimationUsingKeyFrames>
@@ -69,43 +68,23 @@
                 <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0"/>
             </ThicknessAnimationUsingKeyFrames>
         </Storyboard>
-        <Storyboard x:Key="NavigateToSelectTemplate">
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridGenerate">
-                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0,500,0,0"/>
-            </ThicknessAnimationUsingKeyFrames>
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectOptions">
-                <EasingThicknessKeyFrame KeyTime="0:0:0.4" Value="0,500,0,0"/>
-            </ThicknessAnimationUsingKeyFrames>
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectModules">
-                <EasingThicknessKeyFrame KeyTime="0:0:0.5" Value="0,500,0,0"/>
-            </ThicknessAnimationUsingKeyFrames>
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectPresentationFolder">
-                <EasingThicknessKeyFrame KeyTime="0:0:0.6" Value="0,500,0,0"/>
-            </ThicknessAnimationUsingKeyFrames>
-        </Storyboard>
     </Window.Resources>
     <Window.Triggers>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonGoToSelectPresentationFolder">
-            <BeginStoryboard Storyboard="{StaticResource NavigateToFolderSelection}"/>
-        </EventTrigger>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonGoToSelectModules">
             <BeginStoryboard x:Name="NavigateToModuleSelection_BeginStoryboard" Storyboard="{StaticResource NavigateToModuleSelection}"/>
-        </EventTrigger>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonGoToGridSelectOptions">
-            <BeginStoryboard x:Name="NavigateToOptions_BeginStoryboard" Storyboard="{StaticResource NavigateToOptions}"/>
         </EventTrigger>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonGoToGenerate">
             <BeginStoryboard x:Name="NavigateToGenerate_BeginStoryboard" Storyboard="{StaticResource NavigateToGenerate}"/>
         </EventTrigger>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonReset">
-            <BeginStoryboard x:Name="NavigateToSelectTemplate_BeginStoryboard" Storyboard="{StaticResource NavigateToSelectTemplate}"/>
+            <BeginStoryboard x:Name="NavigateToFolderSelection_BeginStoryboard" Storyboard="{StaticResource NavigateToFolderSelection}"/>
         </EventTrigger>
     </Window.Triggers>
 
     <TabControl>
         <TabItem Header="Word-Dokumentation generieren">
             <Grid x:Name="gridRoot" IsEnabled="{Binding UIElementsEnabled}">
-                <Grid x:Name="gridSelectTemplate">
+                <Grid x:Name="gridSelectPresentationFolder" Margin="0,0,0,0">
                     <Grid.Background>
                         <LinearGradientBrush EndPoint="0.362,1.085" StartPoint="0.37,-0.594">
                             <GradientStop Color="#FF111971" Offset="0"/>
@@ -113,52 +92,20 @@
                         </LinearGradientBrush>
                     </Grid.Background>
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBox Text="{Binding TemplatePath, Mode=TwoWay,UpdateSourceTrigger=LostFocus}" ToolTip="{Binding TemplatePath}" VerticalAlignment="Center"  />
-                        <Button  Content="Vorlage auswählen" Command="{Binding ButtonSelectTemplateClickCommand}">
+                        <Button Content="Ordner auswählen" Command="{Binding ButtonSelectRootFolderClickCommand}">
                             <Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
                                     <Setter Property="Background" Value="LightBlue"/>
                                 </Style>
                             </Button.Style>
                         </Button>
-                        <Button x:Name="buttonGoToSelectPresentationFolder"  Content="Weiter">
+                        <Button x:Name="buttonGoToSelectModules" Content="Weiter">
                             <Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
                                     <Setter Property="Background" Value="LightBlue"/>
                                     <Setter Property="Visibility" Value="Hidden"/>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsValidTemplateSelected}" Value="True">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-                <Grid x:Name="gridSelectPresentationFolder" Margin="0,500,0,0">
-                    <Grid.Background>
-                        <LinearGradientBrush EndPoint="0.362,1.085" StartPoint="0.37,-0.594">
-                            <GradientStop Color="#FF869419" Offset="0"/>
-                            <GradientStop Color="#FFF8FFA3" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Grid.Background>
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBox  Text="{Binding FolderPath, Mode=TwoWay,UpdateSourceTrigger=LostFocus}" ToolTip="{Binding FolderPath}" VerticalAlignment="Center" />
-                        <Button  Content="Ordner auswählen"  Command="{Binding ButtonSelectFolderClickCommand}">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                    <Setter Property="Background" Value="LightYellow"/>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                        <Button x:Name="buttonGoToSelectModules"  Content="Weiter">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                    <Setter Property="Background" Value="LightYellow"/>
-                                    <Setter Property="Visibility" Value="Hidden"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsValidFolderSelected}" Value="True">
+                                        <DataTrigger Binding="{Binding IsValidPresentationRootFolderSelected}" Value="True">
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -176,15 +123,14 @@
                     </Grid.Background>
                     <StackPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <TextBlock HorizontalAlignment="Center" Text="Dateien auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
-                        <ListView ItemsSource="{Binding PowerPointPresentations}" Height="150" Opacity="0.8" >
+                        <ListView x:Name="listViewPresentations" ItemsSource="{Binding PowerPointPresentations}" Height="150" Opacity="0.8" >
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid ToolTip="{Binding LayoutDescription}" ToolTipService.ShowOnDisabled="True">
+                                    <Grid ToolTip="{Binding FullPath}" ToolTipService.ShowOnDisabled="True">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-
                                         <CheckBox IsChecked="{Binding IsIncluded}" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <Label Content="{Binding FileName}"  Grid.Column="1"/>
                                     </Grid>
@@ -207,50 +153,11 @@
                                 </Button.Style>
                             </Button>
                         </StackPanel>
-                        <Button x:Name="buttonGoToGridSelectOptions"  Content="Weiter">
+                        <Button x:Name="buttonGoToGenerate"  Content="Weiter" Visibility="{Binding IsAtLeastOnePresentationSelected, Converter={StaticResource bool2vis},Mode=OneWay}">
                             <Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
                                     <Setter Property="Margin" Value="5"/>
                                     <Setter Property="Background" Value="LightGreen"/>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-                <Grid x:Name="gridSelectOptions" Margin="0,500,0,0">
-                    <Grid.Background>
-                        <LinearGradientBrush EndPoint="0.362,1.085" StartPoint="0.37,-0.594">
-                            <GradientStop Color="#FFDDE522" Offset="0"/>
-                            <GradientStop Color="#FFEEEDCE" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Grid.Background>
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock HorizontalAlignment="Center" Text="Optionen: " Style="{StaticResource textBlockDescriptionStyle}"/>
-                        <ListView ItemsSource="{Binding GeneratorOptions}" Height="100" Opacity="0.8" Margin="0,20,0,0">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <CheckBox Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        <Label Grid.Column="1"  Content="{Binding Description}"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                        <Button x:Name="buttonGoToGenerate"  Content="Weiter">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                    <Setter Property="Margin" Value="5"/>
-                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsValidTemplateSelected}" Value="True">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
                                 </Style>
                             </Button.Style>
                         </Button>
@@ -272,36 +179,8 @@
                                 </Style>
                             </Button.Style>
                         </Button>
-                        <TextBlock HorizontalAlignment="Center" Grid.Column="0" Grid.Row="7" Text="Fortschritt:" Style="{StaticResource textBlockDescriptionStyle}"/>
-                        <ProgressBar x:Name="progressBarGeneratorProgress" Height="10" Margin="5" Minimum="0" Maximum="{Binding GeneratorProgressMaximum, Mode=OneWay}" Value="{Binding GeneratorProgressValue, Mode=OneWay}">
-                            <ProgressBar.Style>
-                                <Style TargetType="ProgressBar">
-                                    <!--<Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=textBlockProgress, Path=Visibility}" Value="Hidden">
-                                            <Setter Property="IsIndeterminate" Value="True"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>-->
-                                </Style>
-                            </ProgressBar.Style>
-                        </ProgressBar>
-                        <TextBlock x:Name="textBlockProgress" Grid.Column="3" Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="{}{0} / {1}">
-                                    <Binding ElementName="progressBarGeneratorProgress" Path="Value" />
-                                    <Binding ElementName="progressBarGeneratorProgress" Path="Maximum" />
-                                </MultiBinding>
-                            </TextBlock.Text>
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <Trigger Property="Text" Value="0 / 0">
-                                            <Setter Property="Visibility" Value="Hidden"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                        <Button x:Name="buttonReset" Content="Reset" Command="{Binding ButtonResetClickCommand}" >
+
+                        <Button x:Name="buttonReset" Content="Zurück zum Anfang" Command="{Binding ButtonResetClickCommand}" >
                             <Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
                                     <Setter Property="Margin" Value="5"/>

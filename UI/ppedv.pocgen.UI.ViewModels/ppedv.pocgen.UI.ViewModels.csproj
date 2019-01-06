@@ -31,14 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Interop.Microsoft.Office.Interop.PowerPoint">
-      <HintPath>..\..\Logic\ppedv.pocgen.Logic\bin\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.PowerPoint.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Interop.Microsoft.Office.Interop.Word">
-      <HintPath>..\..\Logic\ppedv.pocgen.Logic\bin\Debug\netstandard2.0\Interop.Microsoft.Office.Interop.Word.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -55,16 +47,6 @@
     <Compile Include="PowerPointPresentationItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RelayCommand.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Domain\ppedv.pocgen.Domain\ppedv.pocgen.Domain.csproj">
-      <Project>{3101BAF8-99CA-497C-BCD8-F788F0B3B5B2}</Project>
-      <Name>ppedv.pocgen.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Logic\ppedv.pocgen.Logic\ppedv.pocgen.Logic.csproj">
-      <Project>{694A5F61-D2EF-4C87-833F-E02682A9CD37}</Project>
-      <Name>ppedv.pocgen.Logic</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
