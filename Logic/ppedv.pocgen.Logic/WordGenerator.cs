@@ -18,7 +18,7 @@ namespace ppedv.pocgen.Logic
 {
     public class WordGenerator
     {
-        public void GeneratePOC_Document(string inputPresentationFullPath,string slideImageDirectoryPath, string outputPOCFullPath)
+        public void GeneratePOC_Document(string inputPresentationFullPath, string slideImageDirectoryPath, string outputPOCFullPath)
         {
             using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(outputPOCFullPath, WordprocessingDocumentType.Document))
             {
@@ -29,62 +29,25 @@ namespace ppedv.pocgen.Logic
                 InitStylesFor(wordDocument);
                 #endregion
 
-                using (PresentationDocument presentationDocument = PresentationDocument.Open(inputPresentationFullPath, false))
+                using (PresentationDocument inputPresentation = PresentationDocument.Open(inputPresentationFullPath, false))
                 {
-                    for (int currentSlide = 0; currentSlide < presentationDocument.PresentationPart.SlideParts.Count(); currentSlide++)
+                    for (int currentSlide = 0; currentSlide < inputPresentation.PresentationPart.SlideParts.Count(); currentSlide++)
                     {
-                        string[] all = GetAllTextFromSlidePart(GetSlidePart(presentationDocument, currentSlide));
-                        if (all == null)
+                        #region Read all Text from current slide
+                        string[] allTextFromCurrentSlide = GetAllTextFromSlide(GetSlide(inputPresentation, currentSlide));
+                        if (allTextFromCurrentSlide == null)
                             continue;
-
-                        bool firstElement = true;
-                        foreach (var powerP in all)
-                        {
-                            if (firstElement)
-                            {
-                                body.AppendChild(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text(powerP)))
-                                {
-                                    ParagraphProperties = new ParagraphProperties(new ParagraphStyleId() { Val = "Heading1" })
-                                });
-                                #region Bild einfügen
-                                ImagePart imagePart = wordDocument.MainDocumentPart.AddImagePart(ImagePartType.Jpeg);
-                                using (FileStream stream = new FileStream(Path.Combine(slideImageDirectoryPath, $"{currentSlide.ToString()}.png"), FileMode.Open))
-                                {
-                                    imagePart.FeedData(stream);
-                                    using (Bitmap img = new Bitmap(stream))
-                                    {
-                                        const int maxWidthCm = 15;
-                                        const int emusPerInch = 914400;
-                                        const int emusPerCm = 360000;
-                                        var widthEmus = (long)(img.Width / img.HorizontalResolution * emusPerInch);
-                                        var heightEmus = (long)(img.Height / img.VerticalResolution * emusPerInch);
-                                        var maxWidthEmus = (long)(maxWidthCm * emusPerCm);
-                                        if (widthEmus > maxWidthEmus) // Wenn das Bild zu groß ist, runterskalieren
-                                        {
-                                            var ratio = (heightEmus * 1.0m) / widthEmus;
-                                            widthEmus = maxWidthEmus;
-                                            heightEmus = (long)(widthEmus * ratio);
-                                        }
-                                        AddImageToBody(wordDocument, wordDocument.MainDocumentPart.GetIdOfPart(imagePart), widthEmus, heightEmus);
-                                    }
-                                }
-                                #endregion
-                                firstElement = false;
-                            }
-                            else
-                                body.AppendChild(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text(powerP))));
-                        }
-                        string notes = GetAllNotesFromSlidePart(GetSlidePart(presentationDocument, currentSlide));
-                        if (notes != null)
-                            body.AppendChild(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text(notes))));
-
-                        if (currentSlide != presentationDocument.PresentationPart.SlideParts.Count() - 1)
+                        #endregion
+                        InsertEachParagraphIntoWordDocument(wordDocument, allTextFromCurrentSlide, slideImageDirectoryPath, currentSlide);
+                        InsertNotesIntoWordDocument(wordDocument, inputPresentation, currentSlide);
+                        #region Insert PageBreak if Slide is not last
+                        if (currentSlide != inputPresentation.PresentationPart.SlideParts.Count() - 1)
                             body.AppendChild(new Paragraph(new Run(new Break() { Type = BreakValues.Page })));
+                        #endregion
                     }
                 }
             }
         }
-
         private void InitStylesFor(WordprocessingDocument wordDocument)
         {
             StyleDefinitionsPart styleDefinitions = wordDocument.MainDocumentPart.AddNewPart<StyleDefinitionsPart>();
@@ -112,88 +75,118 @@ namespace ppedv.pocgen.Logic
 
             styles.Append(style);
         }
-
-        private SlidePart GetSlidePart(PresentationDocument presentationDocument, int slideIndex)
+        private void InsertEachParagraphIntoWordDocument(WordprocessingDocument wordDocument, string[] allTextFromCurrentSlide, string slideImageDirectoryPath, int currentSlide)
         {
-            if (slideIndex < 0)
-                throw new ArgumentOutOfRangeException("slideIndex");
-
+            bool firstElement = true;
+            foreach (var paragraph in allTextFromCurrentSlide)
+            {
+                if (firstElement)
+                {
+                    AppendParagraph(wordDocument, paragraph, "Heading1");
+                    InsertImage(slideImageDirectoryPath, wordDocument, currentSlide);
+                    firstElement = false;
+                }
+                else
+                    AppendParagraph(wordDocument, paragraph);
+            }
+        }
+        private void AppendParagraph(WordprocessingDocument wordDocument, string paragraph, string styleID = "")
+        {
+            wordDocument.MainDocumentPart.Document.Body.AppendChild(new Paragraph(new Run(new Text(paragraph))) { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId() { Val = styleID }) });
+        }
+        private void InsertNotesIntoWordDocument(WordprocessingDocument wordDocument, PresentationDocument inputPresentation, int currentSlide)
+        {
+            string notes = GetAllNotesFromSlide(GetSlide(inputPresentation, currentSlide));
+            if (notes != null)
+                AppendParagraph(wordDocument, notes);
+        }
+        private void InsertImage(string slideImageDirectoryPath, WordprocessingDocument wordDocument, int currentSlide)
+        {
+            ImagePart imagePart = wordDocument.MainDocumentPart.AddImagePart(ImagePartType.Jpeg);
+            using (FileStream stream = new FileStream(Path.Combine(slideImageDirectoryPath, $"{currentSlide.ToString()}.png"), FileMode.Open))
+            {
+                imagePart.FeedData(stream);
+                using (Bitmap img = new Bitmap(stream))
+                {
+                    var resolution = GetImageResolutionInEMUs(img); // English Metric Units
+                    var imageParagraph = CreateParagraphWithImage(wordDocument.MainDocumentPart.GetIdOfPart(imagePart), resolution.width, resolution.heigth);
+                    wordDocument.MainDocumentPart.Document.Body.AppendChild(imageParagraph);
+                }
+            }
+        }
+        private (long width, long heigth) GetImageResolutionInEMUs(Bitmap img)
+        {
+            const int maxWidthCm = 15;
+            const int emusPerInch = 914400;
+            const int emusPerCm = 360000;
+            long widthEmus = (long)(img.Width / img.HorizontalResolution * emusPerInch);
+            long heightEmus = (long)(img.Height / img.VerticalResolution * emusPerInch);
+            var maxWidthEmus = (long)(maxWidthCm * emusPerCm);
+            if (widthEmus > maxWidthEmus) // Wenn das Bild zu groß ist, runterskalieren
+            {
+                var ratio = (heightEmus * 1.0m) / widthEmus;
+                widthEmus = maxWidthEmus;
+                heightEmus = (long)(widthEmus * ratio);
+            }
+            return (widthEmus, heightEmus);
+        }
+        private SlidePart GetSlide(PresentationDocument presentationDocument, int slideIndex)
+        {
             if (presentationDocument?.PresentationPart?.Presentation?.SlideIdList != null)
             {
-                // Get the collection of slide IDs from the slide ID list.
                 var slideIds = presentationDocument.PresentationPart.Presentation.SlideIdList.ChildElements;
-                // If the slide ID is in range...
                 if (slideIndex < slideIds.Count)
                 {
-                    // Get the relationship ID of the slide.
                     string slidePartRelationshipId = (slideIds[slideIndex] as DocumentFormat.OpenXml.Presentation.SlideId).RelationshipId;
-                    // Return the specified slide part from the relationship ID.
                     return (SlidePart)presentationDocument.PresentationPart.GetPartById(slidePartRelationshipId);
                 }
             }
             return null;
         }
-        private string[] GetAllTextFromSlidePart(SlidePart slidePart)
+        private string[] GetAllTextFromSlide(SlidePart slidePart)
         {
-            // Create a new linked list of strings.
-            LinkedList<string> texts = new LinkedList<string>();
-
-            // If the slide exists...
             if (slidePart?.Slide != null)
             {
-                // Iterate through all the paragraphs in the slide.
-                foreach (var paragraph in slidePart.Slide.Descendants<DocumentFormat.OpenXml.Drawing.Paragraph>())
+                LinkedList<string> texts = new LinkedList<string>();
+                foreach (var paragraph in slidePart.Slide.Descendants<A.Paragraph>())
                 {
-                    // Create a new string builder.                    
                     StringBuilder paragraphText = new StringBuilder();
-                    // Iterate through the lines of the paragraph.
-                    foreach (var text in paragraph.Descendants<DocumentFormat.OpenXml.Drawing.Text>())
-                    {
-                        // Append each line to the previous lines.
+                    foreach (var text in paragraph.Descendants<A.Text>())
                         paragraphText.Append(text.Text);
-                    }
 
                     if (paragraphText.Length > 0)
-                    {
-                        // Add each paragraph to the linked list.
                         texts.AddLast(paragraph.InnerText);
-                    }
                 }
+                if (texts.Count > 0)
+                    return texts.ToArray();
             }
-            if (texts.Count > 0)
-                return texts.ToArray();
-
             return null;
         }
-        private string GetAllNotesFromSlidePart(SlidePart slidePart)
+        private string GetAllNotesFromSlide(SlidePart slidePart)
         {
             if (slidePart.NotesSlidePart != null && !string.IsNullOrWhiteSpace(slidePart.NotesSlidePart.NotesSlide.InnerText))
-            // return slidePart.NotesSlidePart.NotesSlide.InnerText;
             {
                 StringBuilder paragraphText = new StringBuilder();
-                foreach (var paragraph in slidePart.NotesSlidePart.NotesSlide.Descendants<DocumentFormat.OpenXml.Drawing.Paragraph>())
-                {
-                    // Create a new string builder.                    
-                    // Iterate through the lines of the paragraph.
-                    foreach (var text in paragraph.Descendants<DocumentFormat.OpenXml.Drawing.Text>())
+                foreach (var paragraph in slidePart.NotesSlidePart.NotesSlide.Descendants<A.Paragraph>())
+                    foreach (var text in paragraph.Descendants<A.Text>())
                     {
                         if (paragraph.InnerXml.Contains(" type=\"slidenum\" "))
-                            continue;
-                        // Append each line to the previous lines.
+                            continue; // Zeilennummer ignorieren
                         paragraphText.AppendLine(text.Text);
                     }
-                }
+
                 if (paragraphText.Length > 0)
                     return paragraphText.ToString();
             }
             return null;
         }
-        private void AddImageToBody(WordprocessingDocument wordDoc, string relationshipId, long iWidth, long iHeight)
+        private Paragraph CreateParagraphWithImage(string relationshipId, long width, long height)
         {
+            #region Create Image-Element
             var element =
                  new Drawing(
                      new DW.Inline(
-                         new DW.Extent() { Cx = iWidth, Cy = iHeight },
+                         new DW.Extent() { Cx = width, Cy = height },
                          new DW.EffectExtent()
                          {
                              LeftEdge = 0L,
@@ -237,7 +230,7 @@ namespace ppedv.pocgen.Logic
                                      new PIC.ShapeProperties(
                                              new A.Transform2D(
                                                 new A.Offset() { X = 0L, Y = 0L },
-                                                new A.Extents() { Cx = iWidth, Cy = iHeight }),
+                                                new A.Extents() { Cx = width, Cy = height }),
                                              new A.PresetGeometry(new A.AdjustValueList())
                                              { Preset = A.ShapeTypeValues.Rectangle }))
                              )
@@ -249,7 +242,8 @@ namespace ppedv.pocgen.Logic
                          DistanceFromLeft = 0U,
                          DistanceFromRight = 0U,
                      });
-
+            #endregion
+            #region Set Image - Style
             Paragraph p = new Paragraph(new Run(element))
             {
                 ParagraphProperties = new ParagraphProperties()
@@ -264,8 +258,8 @@ namespace ppedv.pocgen.Logic
                     }
                 }
             };
-
-            wordDoc.MainDocumentPart.Document.Body.AppendChild(p);
+            #endregion
+            return p;
         }
     }
 }
