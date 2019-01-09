@@ -120,8 +120,6 @@ C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\S
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\System.IO.Packaging.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\System.Windows.Interactivity.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\WPFFolderBrowser.dll
-C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\Interop.Microsoft.Office.Core.dll
-C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\stdole.dll
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\ppedv.pocgen.Logic.pdb
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\DocumentFormat.OpenXml.xml
 C:\Users\Michael Zöhling\source\repos\pocgen\UI\ppedv.pocgen.UI.WPF\bin\Debug\Microsoft.Expression.Interactions.xml
