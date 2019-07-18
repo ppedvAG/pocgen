@@ -3,18 +3,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ppedv.pocgen.UI.WPF"
+        xmlns:local="clr-namespace:pocgen"
         xmlns:helpers="clr-namespace:ppedv.pocgen.UI.WPF.Helpers"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+        xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
+        xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
         xmlns:vm="clr-namespace:ppedv.pocgen.UI.WPF.ViewModels"
         mc:Ignorable="d"
-        Title="ppedv Kursgenerator" Height="500" Width="500" ResizeMode="NoResize" WindowStyle="ToolWindow">
+        Title="ppedv Kursgenerator" Height="600" Width="800">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
+    <Window.Style>
+        <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
+    </Window.Style>
+
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="bool2vis"/>
-        <Style TargetType="TextBlock" x:Key="textBlockDescriptionStyle">
+        <!--<Style TargetType="TextBlock" x:Key="textBlockDescriptionStyle">
             <Setter Property="Margin" Value="5,0"/>
             <Setter Property="FontSize" Value="40"/>
             <Setter Property="FontFamily" Value="Sylfaen"/>
@@ -67,9 +74,9 @@
                 <EasingThicknessKeyFrame KeyTime="0" Value="0,500,0,0"/>
                 <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0"/>
             </ThicknessAnimationUsingKeyFrames>
-        </Storyboard>
+        </Storyboard>-->
     </Window.Resources>
-    <Window.Triggers>
+    <!--<Window.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonGoToSelectModules">
             <BeginStoryboard x:Name="NavigateToModuleSelection_BeginStoryboard" Storyboard="{StaticResource NavigateToModuleSelection}"/>
         </EventTrigger>
@@ -79,9 +86,111 @@
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonReset">
             <BeginStoryboard x:Name="NavigateToFolderSelection_BeginStoryboard" Storyboard="{StaticResource NavigateToFolderSelection}"/>
         </EventTrigger>
-    </Window.Triggers>
+    </Window.Triggers>-->
 
-    <TabControl>
+    <Grid x:Name="gridRoot">
+        <DockPanel LastChildFill="True"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch">
+            <Grid x:Name="gridNavigation" DockPanel.Dock="Top">
+                <Border Background="{DynamicResource {x:Static adonisUi:Brushes.AccentBrush}}"
+                        adonisExtensions:LayerExtension.Layer="3"
+                        VerticalAlignment="Top">
+                    <DockPanel LastChildFill="False">
+                        <UniformGrid DockPanel.Dock="Right"
+                                     Columns="2"
+                                     Margin="{adonisUi:Space 1}">
+                            <Button Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}"
+                                    Content="Previous"
+                                    Command="{Binding PreviousViewCommand}"
+                                    Margin="{adonisUi:Space 1, 0, 0, 0}"/>
+                            <Button Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}"
+                                    Content="Next"
+                                    Command="{Binding NextViewCommand}"/>
+                        </UniformGrid>
+
+                    </DockPanel>
+
+                </Border>
+            </Grid>
+
+            <StatusBar DockPanel.Dock="Bottom">
+                <StatusBarItem Content="Ready"/>
+            </StatusBar>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <GroupBox Padding="0"
+                              MinWidth="132">
+                        <GroupBox.Header>
+                            <TextBlock Text="Actions"
+                                       Margin="{adonisUi:Space 1}"/>
+                        </GroupBox.Header>
+                        <StackPanel Orientation="Vertical"
+                                    Margin="{adonisUi:Space 0, 1, 0, 0}">
+                            <Button Content="Change Theme"
+                                    Style="{DynamicResource {x:Static adonisUi:Styles.ToolbarButton}}"
+                                    HorizontalAlignment="Stretch"
+                                    Padding="8"/>
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
+                <Grid Grid.Column="1"
+                      ClipToBounds="True">
+                    <!--<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Content="Ordner auswählen" Command="{Binding ButtonSelectRootFolderClickCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
+                                    <Setter Property="Background" Value="LightBlue"/>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button x:Name="buttonGoToSelectModules" Content="Weiter">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
+                                    <Setter Property="Background" Value="LightBlue"/>
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsValidPresentationRootFolderSelected}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>-->
+
+                </Grid>
+            </Grid>
+        </DockPanel>
+        <Grid x:Name="gridHeader"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Top">
+            <Viewbox Stretch="Fill"
+                     Height="46"
+                     Width="192">
+                <Viewbox.Effect>
+                    <DropShadowEffect ShadowDepth="2"
+                                      BlurRadius="10"
+                                      Opacity="0.2"/>
+                </Viewbox.Effect>
+                <Path Data="M 0 0 L 20 0 L 18 8 L 2 8 Z"
+                      Fill="{DynamicResource {x:Static adonisUi:Brushes.AccentHighlightBrush}}"/>
+            </Viewbox>
+            <TextBlock Text="pocgen"
+                       TextAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="{DynamicResource {x:Static adonisUi:Brushes.AccentForegroundBrush}}"
+                       FontSize="14"/>
+        </Grid>
+    </Grid>
+
+
+    <!--<TabControl>
         <TabItem Header="Word-Dokumentation generieren">
             <Grid x:Name="gridRoot" IsEnabled="{Binding UIElementsEnabled}">
                 <Grid x:Name="gridSelectPresentationFolder" Margin="0,0,0,0">
@@ -192,5 +301,5 @@
                 </Grid>
             </Grid>
         </TabItem>
-    </TabControl>
+    </TabControl>-->
 </Window>
