@@ -269,6 +269,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             set
             {
                 SetValue(ref currentSlide, value);
+                OnPropertyChanged(nameof(IsMaximumReached));
                 if (includedImages == null || includedImages.Length == 0 || CurrentSlide == 0)
                 {
                     PreviewSource = null;
@@ -292,6 +293,11 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             set => SetValue(ref maximumSlides, value);
         }
 
+        public bool IsMaximumReached
+        {
+            get => CurrentSlide == MaximumSlides;
+        }
+
         private ICommand resetPreviewCommand;
         public ICommand ResetPreviewCommand
         {
@@ -313,12 +319,38 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                                                             .SelectMany(x => Enumerable.Range(x.PreviewImageRange.Item1, (x.PreviewImageRange.Item2 + 1) - x.PreviewImageRange.Item1))
                                                             .Select(x => System.IO.Path.Combine(tempImagePath, $"{x}.png"))
                                                             .ToArray();
-                    CurrentSlide = 1;
+                    CurrentSlide = MaximumSlides == 0 ? 0 : 1;
                 });
                 return resetPreviewCommand;
             }
         }
 
+        private ICommand previewForwardCommand;
+        public ICommand PreviewForwardCommand
+        {
+            get
+            {
+                previewForwardCommand = previewForwardCommand ?? new RelayCommand(parameter =>
+                {
+                    if (CurrentSlide < MaximumSlides)
+                        CurrentSlide++;
+                });
+                return previewForwardCommand;
+            }
+        }
+        private ICommand previewBackwardCommand;
+        public ICommand PreviewBackwardCommand
+        {
+            get
+            {
+                previewBackwardCommand = previewBackwardCommand ?? new RelayCommand(parameter =>
+                {
+                    if (CurrentSlide != 1)
+                        CurrentSlide--;
+                });
+                return previewBackwardCommand;
+            }
+        }
 
         #endregion
     }

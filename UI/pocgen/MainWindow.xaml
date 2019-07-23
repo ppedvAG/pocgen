@@ -10,6 +10,7 @@
         xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
         xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
         xmlns:vm="clr-namespace:ppedv.pocgen.UI.WPF.ViewModels"
+        xmlns:h="clr-namespace:pocgen.Helpers"
         mc:Ignorable="d"
         Title="ppedv Kursgenerator" Height="650" Width="800">
     <Window.DataContext>
@@ -20,9 +21,7 @@
     </Window.Style>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="bool2vis"/>
-        <!--<Style TargetType="{x:Type ListBoxItem}">
-            <Setter Property="IsSelected" Value="{Binding IsIncluded, Mode=TwoWay}" />
-        </Style>-->
+        <h:IsEqualConverter x:Key="equalConverter"/>
     </Window.Resources>
 
     <Grid x:Name="gridRoot">
@@ -51,8 +50,8 @@
             <StatusBar DockPanel.Dock="Bottom">
                 <StatusBarItem Content="Ready"/>
             </StatusBar>
-
-            <Grid>
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -175,7 +174,21 @@
                                     <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1.5" Margin="10">
                                         <Image Source="{Binding PreviewSource}" />
                                     </Border>
-                                    <Button Grid.Row="1" Grid.Column="0" Content="&lt;"  Margin="5" />
+                                    <Button Grid.Row="1" Grid.Column="0" Content="&lt;"  Margin="5" Command="{Binding PreviewBackwardCommand}">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"> 
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CurrentSlide}" Value="1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding CurrentSlide}" Value="0">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
                                     <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0}/{1}">
@@ -184,7 +197,18 @@
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
-                                    <Button Grid.Row="1" Grid.Column="2" Content="&gt;"  Margin="5" />
+                                    <Button Grid.Row="1" Grid.Column="2" Content="&gt;"  Margin="5" Command="{Binding PreviewForwardCommand}" >
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMaximumReached}" Value="True">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
                                     <Slider Grid.Row="2" Grid.ColumnSpan="3" Minimum="1" Maximum="{Binding MaximumSlides}" Value="{Binding CurrentSlide}"
                                             TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" Margin="10,0,10,10"/>
                                 </Grid>
@@ -206,6 +230,7 @@
 
                 </Grid>
             </Grid>
+            </ScrollViewer>
         </DockPanel>
         <Grid x:Name="gridHeader"
               HorizontalAlignment="Center"
