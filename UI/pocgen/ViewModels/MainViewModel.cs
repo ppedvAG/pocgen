@@ -8,7 +8,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using WPFFolderBrowser;
 
 namespace ppedv.pocgen.UI.WPF.ViewModels
@@ -21,16 +24,18 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             UIElementsEnabled = true;
             PowerPointPresentations = new ObservableCollection<PowerPointPresentationItem>();
 
-            tempPath = Path.Combine(Path.GetTempPath(), "pocgen");
-            tempImagePath = Directory.CreateDirectory(Path.Combine(tempPath, "genSlides")).FullName;
-
             // Cleanup
-            Directory.Delete(tempImagePath, true);
-            Directory.CreateDirectory(tempImagePath);
+            tempPath = Path.Combine(Path.GetTempPath(), "pocgen");
+            if(Directory.Exists(tempPath))
+                Directory.Delete(tempPath, true);
+            Directory.CreateDirectory(tempPath);
+
+            tempImagePathForPOC = Directory.CreateDirectory(Path.Combine(tempPath, "genSlidesPOC")).FullName;
         }
 
         private readonly string tempPath;
-        private readonly string tempImagePath;
+        private string tempImagePath;
+        private readonly string tempImagePathForPOC;
 
         private string presentationRootFolderPath;
         public string PresentationRootFolderPath
@@ -45,10 +50,12 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                     return;
                 }
                 SetValue(ref presentationRootFolderPath, value);
+
                 // Cleanup
+                CurrentSlide = 0;
                 PowerPointPresentations.Clear();
-                Directory.Delete(tempImagePath, true);
-                Directory.CreateDirectory(tempImagePath);
+
+                tempImagePath = Path.Combine(tempPath,Guid.NewGuid().ToString());
 
                 using (PowerPointHelper pph = new PowerPointHelper())
                 {
@@ -91,6 +98,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                     foreach (string subdir in Directory.GetDirectories(tempImagePath))
                         Directory.Delete(subdir);
 
+                    ResetPreviewCommand.Execute(null);
                     IsValidPresentationRootFolderSelected = true;
                     Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Valid FolderPath selected");
                 }
@@ -178,12 +186,12 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                     {
                         var mergedPresentation = pph.CreateNewPresentation(tempPresentation);
                         pph.MergePresentationContentIntoNewPresentation(PowerPointPresentations.Where(x => x.IsIncluded).Select(x => x.FullPath), mergedPresentation);
-                        pph.ExportAllSlidesAsImage(mergedPresentation, tempImagePath);
+                        pph.ExportAllSlidesAsImage(mergedPresentation, tempImagePathForPOC);
                         pph.SavePresentationAs(mergedPresentation, tempPresentation);
                     }
 
                     WordGenerator generator = new WordGenerator();
-                    generator.GeneratePOC_Document(tempPresentation, tempImagePath, tempDocument);
+                    generator.GeneratePOC_Document(tempPresentation, tempImagePathForPOC, tempDocument);
                     Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Finish");
 
                     SaveFileDialog dlg = new SaveFileDialog();
@@ -244,5 +252,74 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                 return buttonUnselectAllPresentationsClickCommand;
             }
         }
+
+        #region Preview
+        private string[] includedImages;
+
+        private ImageSource previewSource;
+        public ImageSource PreviewSource
+        {
+            get => previewSource;
+            set => SetValue(ref previewSource, value);
+        }
+        private int currentSlide;
+        public int CurrentSlide
+        {
+            get => currentSlide;
+            set
+            {
+                SetValue(ref currentSlide, value);
+                if (includedImages == null || includedImages.Length == 0 || CurrentSlide == 0)
+                {
+                    PreviewSource = null;
+                    return;
+                }
+                try
+                {
+                    PreviewSource = new BitmapImage(new Uri(includedImages[CurrentSlide - 1]));
+                }
+                catch (FileNotFoundException)
+                {
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Exception: Slide {CurrentSlide-1}.png not found !");
+                    PreviewSource = null;
+                }
+            }
+        }
+        private int maximumSlides;
+        public int MaximumSlides
+        {
+            get => maximumSlides;
+            set => SetValue(ref maximumSlides, value);
+        }
+
+        private ICommand resetPreviewCommand;
+        public ICommand ResetPreviewCommand
+        {
+            get
+            {
+                resetPreviewCommand = resetPreviewCommand ?? new RelayCommand(parameter =>
+                {
+                    if (PowerPointPresentations == null || PowerPointPresentations.Count() == 0)
+                    {
+                        CurrentSlide = 1;
+                        MaximumSlides = 1;
+                        return;
+                    }
+
+                    MaximumSlides = PowerPointPresentations.Where(x => x.IsIncluded)
+                                                           .Sum(x => x.PreviewImageRange.Item2 + 1 - x.PreviewImageRange.Item1);
+
+                    includedImages = PowerPointPresentations.Where(x => x.IsIncluded)
+                                                            .SelectMany(x => Enumerable.Range(x.PreviewImageRange.Item1, (x.PreviewImageRange.Item2 + 1) - x.PreviewImageRange.Item1))
+                                                            .Select(x => System.IO.Path.Combine(tempImagePath, $"{x}.png"))
+                                                            .ToArray();
+                    CurrentSlide = 1;
+                });
+                return resetPreviewCommand;
+            }
+        }
+
+
+        #endregion
     }
 }
