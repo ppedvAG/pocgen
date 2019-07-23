@@ -10,83 +10,21 @@
         xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
         xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
         xmlns:vm="clr-namespace:ppedv.pocgen.UI.WPF.ViewModels"
+        xmlns:c="clr-namespace:pocgen.Controls"
         mc:Ignorable="d"
-        Title="ppedv Kursgenerator" Height="600" Width="800">
+        Title="ppedv Kursgenerator" Height="650" Width="800">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
     <Window.Style>
         <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
     </Window.Style>
-
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="bool2vis"/>
-        <!--<Style TargetType="TextBlock" x:Key="textBlockDescriptionStyle">
-            <Setter Property="Margin" Value="5,0"/>
-            <Setter Property="FontSize" Value="40"/>
-            <Setter Property="FontFamily" Value="Sylfaen"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-        <Style TargetType="Button" x:Key="defaultButtonStyle">
-            <Setter Property="Margin" Value="50"/>
-            <Setter Property="FontSize" Value="40"/>
-            <Setter Property="FontFamily" Value="Sylfaen"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            BorderBrush="{TemplateBinding Foreground}"
-                            CornerRadius="25"
-                            Padding="10"
-                            BorderThickness="10"
-                            Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="LightCoral"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Storyboard x:Key="NavigateToFolderSelection">
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridGenerate">
-                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0,500,0,0"/>
-            </ThicknessAnimationUsingKeyFrames>
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectModules">
-                <EasingThicknessKeyFrame KeyTime="0:0:0.5" Value="0,500,0,0"/>
-            </ThicknessAnimationUsingKeyFrames>
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectPresentationFolder">
-                <EasingThicknessKeyFrame KeyTime="0:0:0.6" Value="0,0,0,0"/>
-            </ThicknessAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Key="NavigateToModuleSelection">
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridSelectModules">
-                <EasingThicknessKeyFrame KeyTime="0" Value="0,500,0,0"/>
-                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0"/>
-            </ThicknessAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Key="NavigateToGenerate">
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="gridGenerate">
-                <EasingThicknessKeyFrame KeyTime="0" Value="0,500,0,0"/>
-                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="0"/>
-            </ThicknessAnimationUsingKeyFrames>
-        </Storyboard>-->
+        <!--<Style TargetType="{x:Type ListBoxItem}">
+            <Setter Property="IsSelected" Value="{Binding IsIncluded, Mode=TwoWay}" />
+        </Style>-->
     </Window.Resources>
-    <!--<Window.Triggers>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonGoToSelectModules">
-            <BeginStoryboard x:Name="NavigateToModuleSelection_BeginStoryboard" Storyboard="{StaticResource NavigateToModuleSelection}"/>
-        </EventTrigger>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonGoToGenerate">
-            <BeginStoryboard x:Name="NavigateToGenerate_BeginStoryboard" Storyboard="{StaticResource NavigateToGenerate}"/>
-        </EventTrigger>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="buttonReset">
-            <BeginStoryboard x:Name="NavigateToFolderSelection_BeginStoryboard" Storyboard="{StaticResource NavigateToFolderSelection}"/>
-        </EventTrigger>
-    </Window.Triggers>-->
 
     <Grid x:Name="gridRoot">
         <DockPanel LastChildFill="True"
@@ -101,19 +39,16 @@
                                      Columns="2"
                                      Margin="{adonisUi:Space 1}">
                             <Button Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}"
-                                    Content="Previous"
-                                    Command="{Binding PreviousViewCommand}"
+                                    Content="Info"
                                     Margin="{adonisUi:Space 1, 0, 0, 0}"/>
                             <Button Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}"
-                                    Content="Next"
-                                    Command="{Binding NextViewCommand}"/>
+                                    Content="About">
+                            </Button>
                         </UniformGrid>
 
                     </DockPanel>
-
                 </Border>
             </Grid>
-
             <StatusBar DockPanel.Dock="Bottom">
                 <StatusBarItem Content="Ready"/>
             </StatusBar>
@@ -127,42 +62,128 @@
                     <GroupBox Padding="0"
                               MinWidth="132">
                         <GroupBox.Header>
-                            <TextBlock Text="Actions"
-                                       Margin="{adonisUi:Space 1}"/>
+                            <TextBlock Text="Aktionen" Margin="{adonisUi:Space 1}"/>
                         </GroupBox.Header>
                         <StackPanel Orientation="Vertical"
                                     Margin="{adonisUi:Space 0, 1, 0, 0}">
                             <Button Content="Change Theme"
                                     Style="{DynamicResource {x:Static adonisUi:Styles.ToolbarButton}}"
                                     HorizontalAlignment="Stretch"
-                                    Padding="8"/>
+                                    Padding="8"
+                                    Click="ChangeTheme"/>
                         </StackPanel>
                     </GroupBox>
                 </Grid>
                 <Grid Grid.Column="1"
-                      ClipToBounds="True">
-                    <!--<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button Content="Ordner auswählen" Command="{Binding ButtonSelectRootFolderClickCommand}">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                    <Setter Property="Background" Value="LightBlue"/>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                        <Button x:Name="buttonGoToSelectModules" Content="Weiter">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                    <Setter Property="Background" Value="LightBlue"/>
-                                    <Setter Property="Visibility" Value="Hidden"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsValidPresentationRootFolderSelected}" Value="True">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </StackPanel>-->
+                      ClipToBounds="True"
+                      Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
+                              Margin="0,0,0,10">
+                        <GroupBox.Header>
+                            <TextBlock Text="Schritt 1: Stammverzeichnis der Präsentationen wählen:"/>
+                        </GroupBox.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Content="Ordner auswählen" Command="{Binding ButtonSelectRootFolderClickCommand}"/>
+                            <TextBlock VerticalAlignment="Center" Margin="20,0,0,0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding PresentationRootFolderPath,StringFormat='Ordner: {0}'}"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Padding="0" MinHeight="200" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" >
+                        <GroupBox.Header>
+                            <TextBlock Text="Schritt 2: Präsentationen auswählen:" Margin="{adonisUi:Space 1}"/>
+                        </GroupBox.Header>
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <GroupBox Padding="0" MinHeight="200" Grid.Column="0">
+                                <GroupBox.Header>
+                                    <TextBlock Text="Zu bearbeitende Dateien auswählen:" Margin="{adonisUi:Space 1}"/>
+                                </GroupBox.Header>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="150" Margin="0,0,20,0" >
+                                        <ItemsControl x:Name="listViewPresentations" ItemsSource="{Binding PowerPointPresentations}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <CheckBox IsChecked="{Binding IsIncluded}"/>
+                                                        <TextBlock Text="{Binding FileName}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+
+                                    <Button Grid.Row="1" Grid.Column="0" Content="Alle auswählen"  Margin="5,5,20,5" Command="{Binding ButtonSelectAllPresentationsClickCommand}" />
+                                    <Button Grid.Row="1" Grid.Column="1" Content="Alle abwählen"  Margin="5,5,20,5" Command="{Binding ButtonUnselectAllPresentationsClickCommand}" />
+                                </Grid>
+                            </GroupBox>
+                            <GridSplitter Grid.Column="1"/>
+
+                            <c:PreviewControl MinHeight="200" Grid.Column="2" ItemSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Window}, Path=DataContext.PowerPointPresentations,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <!--<GroupBox Padding="0" MinHeight="200" Grid.Column="2">
+                                <GroupBox.Header>
+                                    <TextBlock Text="Vorschau:" Margin="{adonisUi:Space 1}"/>
+                                </GroupBox.Header>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
+                                    <Button Grid.Row="1" Grid.Column="0" Content="&lt;"  Margin="5" />
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="20/20" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
+                                    <Button Grid.Row="1" Grid.Column="2" Content="&gt;"  Margin="5" />
+                                </Grid>
+                            </GroupBox>-->
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox MinHeight="200" Margin="0,10,0,0"
+                              Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4">
+                        <GroupBox.Header>
+                            <TextBlock Text="Actions"/>
+                        </GroupBox.Header>
+                        <StackPanel>
+                            <Button Grid.Row="4" Grid.Column="0" Content="pocgen" Command="{Binding ButtonStartClickCommand}"  Margin="5,5,20,5" />
+                            <Button Grid.Row="4" Grid.Column="0" Content="pdf"  Margin="5,5,20,5" />
+                            <Button Grid.Row="4" Grid.Column="0" Content="merge"  Margin="5,5,20,5" />
+                        </StackPanel>
+                    </GroupBox>
 
                 </Grid>
             </Grid>
@@ -188,118 +209,4 @@
                        FontSize="14"/>
         </Grid>
     </Grid>
-
-
-    <!--<TabControl>
-        <TabItem Header="Word-Dokumentation generieren">
-            <Grid x:Name="gridRoot" IsEnabled="{Binding UIElementsEnabled}">
-                <Grid x:Name="gridSelectPresentationFolder" Margin="0,0,0,0">
-                    <Grid.Background>
-                        <LinearGradientBrush EndPoint="0.362,1.085" StartPoint="0.37,-0.594">
-                            <GradientStop Color="#FF111971" Offset="0"/>
-                            <GradientStop Color="#FF00F0FD" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Grid.Background>
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button Content="Ordner auswählen" Command="{Binding ButtonSelectRootFolderClickCommand}">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                    <Setter Property="Background" Value="LightBlue"/>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                        <Button x:Name="buttonGoToSelectModules" Content="Weiter">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                    <Setter Property="Background" Value="LightBlue"/>
-                                    <Setter Property="Visibility" Value="Hidden"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsValidPresentationRootFolderSelected}" Value="True">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-                <Grid x:Name="gridSelectModules" Margin="0,500,0,0">
-                    <Grid.Background>
-                        <LinearGradientBrush EndPoint="0.362,1.085" StartPoint="0.37,-0.594">
-                            <GradientStop Color="#FF076312" Offset="0"/>
-                            <GradientStop Color="#FF32EA90" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Grid.Background>
-                    <StackPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock HorizontalAlignment="Center" Text="Dateien auswählen: " Style="{StaticResource textBlockDescriptionStyle}" />
-                        <ListView x:Name="listViewPresentations" ItemsSource="{Binding PowerPointPresentations}" Height="150" Opacity="0.8" >
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid ToolTip="{Binding FullPath}" ToolTipService.ShowOnDisabled="True">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <CheckBox IsChecked="{Binding IsIncluded}" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <Label Content="{Binding FileName}"  Grid.Column="1"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="Alle auswählen" FontSize="20" Margin="5" Command="{Binding ButtonSelectAllPresentationsClickCommand}">
-                                <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                        <Setter Property="Background" Value="LightGreen"/>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                            <Button Content="Alle abwählen"  FontSize="20" Margin="5" Command="{Binding ButtonUnselectAllPresentationsClickCommand}">
-                                <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                        <Setter Property="Background" Value="LightGreen"/>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                        </StackPanel>
-                        <Button x:Name="buttonGoToGenerate"  Content="Weiter" Visibility="{Binding IsAtLeastOnePresentationSelected, Converter={StaticResource bool2vis},Mode=OneWay}">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                    <Setter Property="Margin" Value="5"/>
-                                    <Setter Property="Background" Value="LightGreen"/>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-                <Grid x:Name="gridGenerate" Margin="0,500,0,0">
-                    <Grid.Background>
-                        <LinearGradientBrush EndPoint="0.362,1.085" StartPoint="0.37,-0.594">
-                            <GradientStop Color="#FFFA0000" Offset="0"/>
-                            <GradientStop Color="#FFEECECE" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Grid.Background>
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button Content="Start" Command="{Binding ButtonStartClickCommand}">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                    <Setter Property="Margin" Value="5"/>
-                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-
-                        <Button x:Name="buttonReset" Content="Zurück zum Anfang" Command="{Binding ButtonResetClickCommand}" >
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource defaultButtonStyle}">
-                                    <Setter Property="Margin" Value="5"/>
-                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Grid>
-        </TabItem>
-    </TabControl>-->
 </Window>

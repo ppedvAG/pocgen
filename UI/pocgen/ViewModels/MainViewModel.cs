@@ -23,6 +23,10 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
 
             tempPath = Path.Combine(Path.GetTempPath(), "pocgen");
             tempImagePath = Directory.CreateDirectory(Path.Combine(tempPath, "genSlides")).FullName;
+
+            // Cleanup
+            Directory.Delete(tempImagePath, true);
+            Directory.CreateDirectory(tempImagePath);
         }
 
         private readonly string tempPath;
@@ -41,21 +45,52 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                     return;
                 }
                 SetValue(ref presentationRootFolderPath, value);
+                // Cleanup
                 PowerPointPresentations.Clear();
+                Directory.Delete(tempImagePath, true);
+                Directory.CreateDirectory(tempImagePath);
 
-                foreach (var file in Directory.GetFiles(presentationRootFolderPath, "*.pptx", SearchOption.AllDirectories))
+                using (PowerPointHelper pph = new PowerPointHelper())
                 {
-                    var ppi = new PowerPointPresentationItem(file);
-                    ppi.PropertyChanged += (sender, e) =>
+                    int presentationCounter = 0;
+                    int presentationStartingIndex = 0;
+                    foreach (var file in Directory.GetFiles(presentationRootFolderPath, "*.pptx", SearchOption.AllDirectories).Where(x => x.Contains("~$") == false))
                     {
-                        if (e.PropertyName == "IsIncluded")
-                            IsAtLeastOnePresentationSelected = PowerPointPresentations.Any(x => x.IsIncluded);
-                    };
-                    PowerPointPresentations.Add(ppi);
-                }
+                        var ppi = new PowerPointPresentationItem(file);
+                        ppi.PropertyChanged += (sender, e) =>
+                        {
+                            if (e.PropertyName == "IsIncluded")
+                                IsAtLeastOnePresentationSelected = PowerPointPresentations.Any(x => x.IsIncluded);
+                        };
 
+                        ppi.PreviewImagePath = Path.Combine(tempImagePath,presentationCounter++.ToString());
+                        // Generate Images (Task ?)
+                        var presentation = pph.OpenPresentation(file);
+                        Directory.CreateDirectory(ppi.PreviewImagePath);
+                        pph.ExportAllSlidesAsImage(presentation, ppi.PreviewImagePath);
+                        presentation.Close();
+
+                        int numberOfSlides = Directory.GetFiles(ppi.PreviewImagePath).Length;
+                        ppi.PreviewImageRange = (presentationStartingIndex, presentationStartingIndex + numberOfSlides -1);
+                        presentationStartingIndex += numberOfSlides;
+
+                        PowerPointPresentations.Add(ppi);
+                    }
+                }
                 if (PowerPointPresentations.Count > 0)
                 {
+                    int filenumber = 0;
+                    foreach(string subdir in Directory.GetDirectories(tempImagePath))
+                    {
+                        foreach (string file in Directory.GetFiles(subdir))
+                        {
+                            File.Move(file, Path.Combine(tempImagePath, $"{filenumber++}.png"));
+                        }
+                    }
+
+                    foreach (string subdir in Directory.GetDirectories(tempImagePath))
+                        Directory.Delete(subdir);
+
                     IsValidPresentationRootFolderSelected = true;
                     Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Valid FolderPath selected");
                 }

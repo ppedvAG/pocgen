@@ -15,7 +15,7 @@ namespace ppedv.pocgen.Logic
         }
         private readonly Application app;
 
-        public Presentation OpenPresentation(string filename) => app.Presentations.Open(filename);
+        public Presentation OpenPresentation(string filename) => app.Presentations.Open(filename,WithWindow:MsoTriState.msoFalse);
         public Presentation CreateNewPresentation(string filename) => app.Presentations.Add(MsoTriState.msoFalse);
         public void SavePresentationAs(Presentation output, string filename) => output.SaveAs(filename);
 

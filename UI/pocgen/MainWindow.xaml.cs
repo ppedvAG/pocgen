@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdonisUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,15 @@ namespace pocgen
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private bool _isDark;
+
+        private void ChangeTheme(object sender, RoutedEventArgs e)
+        {
+            ResourceLocator.SetColorScheme(Application.Current.Resources, _isDark ? ResourceLocator.LightColorScheme : ResourceLocator.DarkColorScheme);
+
+            _isDark = !_isDark;
         }
     }
 }
