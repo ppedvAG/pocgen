@@ -70,7 +70,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                                 IsAtLeastOnePresentationSelected = PowerPointPresentations.Any(x => x.IsIncluded);
                         };
 
-                        ppi.PreviewImagePath = Path.Combine(tempImagePath,presentationCounter++.ToString());
+                        ppi.PreviewImagePath = Path.Combine(tempImagePath,presentationCounter++.ToString().PadLeft(5,'0'));
                         // Generate Images (Task ?)
                         var presentation = pph.OpenPresentation(file);
                         Directory.CreateDirectory(ppi.PreviewImagePath);
