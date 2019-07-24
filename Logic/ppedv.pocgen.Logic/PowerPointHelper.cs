@@ -12,11 +12,12 @@ namespace ppedv.pocgen.Logic
         public PowerPointHelper()
         {
             app = new Application();
+            // app.Visible = MsoTriState.msoTrue;
         }
-        private readonly Application app;
+        private Application app;
 
         public Presentation OpenPresentation(string filename) => app.Presentations.Open(filename,WithWindow:MsoTriState.msoFalse);
-        public Presentation CreateNewPresentation(string filename) => app.Presentations.Add(MsoTriState.msoFalse);
+        public Presentation CreateNewPresentation() => app.Presentations.Add(MsoTriState.msoFalse);
         public void SavePresentationAs(Presentation output, string filename) => output.SaveAs(filename);
 
         public void ExportAllSlidesAsImage(Presentation presentation, string path)

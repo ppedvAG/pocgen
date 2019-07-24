@@ -12,7 +12,7 @@
         xmlns:vm="clr-namespace:ppedv.pocgen.UI.WPF.ViewModels"
         xmlns:h="clr-namespace:pocgen.Helpers"
         mc:Ignorable="d"
-        Title="ppedv Kursgenerator" Height="650" Width="800">
+        Title="ppedv Kursgenerator" Height="800" Width="800">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
@@ -39,7 +39,6 @@
             <StatusBar DockPanel.Dock="Bottom">
                 <StatusBarItem Content="Ready"/>
             </StatusBar>
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -49,7 +48,7 @@
                         <GroupBox Padding="0"
                               MinWidth="132">
                             <GroupBox.Header>
-                                <TextBlock Text="Aktionen" Margin="{adonisUi:Space 1}"/>
+                                <TextBlock Text="Optionen" Margin="{adonisUi:Space 1}"/>
                             </GroupBox.Header>
                             <StackPanel Orientation="Vertical"
                                     Margin="{adonisUi:Space 0, 1, 0, 0}">
@@ -83,13 +82,17 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Button Content="Ordner auswählen" Command="{Binding ButtonSelectRootFolderClickCommand}"/>
                                 <TextBlock VerticalAlignment="Center" Margin="20,0,0,0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding PresentationRootFolderPath,StringFormat='Ordner: {0}'}"/>
+                                <ContentControl Grid.Column="2" Height="22" Visibility="{Binding IsGeneratingPreview,Converter={StaticResource bool2vis}}"
+                                    ContentTemplate="{DynamicResource {x:Static adonisUi:Templates.LoadingCircle}}"
+                                    Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
                             </Grid>
                         </GroupBox>
 
-                        <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Padding="0" MinHeight="200"  >
+                        <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Padding="0" MinHeight="200" IsEnabled="{Binding IsValidPresentationRootFolderSelected}" Margin="0,0,0,5">
                             <GroupBox.Header>
                                 <TextBlock Text="Schritt 2: Präsentationen auswählen:" Margin="{adonisUi:Space 1}"/>
                             </GroupBox.Header>
@@ -100,7 +103,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <GroupBox Padding="0" MinHeight="200" Grid.Column="0">
+                                <GroupBox Padding="0" MinHeight="200" Grid.Column="0" Margin="0,0,5,0">
                                     <GroupBox.Header>
                                         <TextBlock Text="Zu bearbeitende Dateien auswählen:" Margin="{adonisUi:Space 1}"/>
                                     </GroupBox.Header>
@@ -139,9 +142,10 @@
                                         <Button Grid.Row="1" Grid.Column="1" Content="Alle abwählen"  Margin="5,5,20,5" Command="{Binding ButtonUnselectAllPresentationsClickCommand}" />
                                     </Grid>
                                 </GroupBox>
-                                <GridSplitter Grid.Column="1" Background="CornflowerBlue"/>
-
-                                <GroupBox Padding="0" MinHeight="200" Grid.Column="2" >
+                                
+                                <GridSplitter Grid.Column="1" Background="{DynamicResource {x:Static adonisUi:Brushes.AccentHighlightBrush}}"/>
+                                
+                                <GroupBox Padding="0" MinHeight="200" Grid.Column="2" Margin="5,0,0,0" >
                                     <GroupBox.Header>
                                         <TextBlock Text="Vorschau:" Margin="{adonisUi:Space 1}"/>
                                     </GroupBox.Header>
@@ -201,21 +205,36 @@
                             </Grid>
                         </GroupBox>
 
-                        <GridSplitter Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Background="CornflowerBlue"/>
-
-                        <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" MinHeight="200">
+                        <GridSplitter Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Background="{DynamicResource {x:Static adonisUi:Brushes.AccentHighlightBrush}}"/>
+                        <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" MinHeight="200" Margin="0,5,0,0">
+                            <GroupBox.Style>
+                                <Style TargetType="GroupBox" BasedOn="{StaticResource {x:Type GroupBox}}">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsAtLeastOnePresentationSelected}" Value="True">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding GeneratorIsWorking}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </GroupBox.Style>
                             <GroupBox.Header>
-                                <TextBlock Text="Actions"/>
+                                <TextBlock Text="Aktionen"/>
                             </GroupBox.Header>
                             <StackPanel>
-                                <Button Grid.Row="4" Grid.Column="0" Content="pocgen" Command="{Binding ButtonStartClickCommand}"  Margin="5,5,20,5" />
-                                <Button Grid.Row="4" Grid.Column="0" Content="pdf"  Margin="5,5,20,5" />
-                                <Button Grid.Row="4" Grid.Column="0" Content="merge"  Margin="5,5,20,5" />
+                                <Button Content="Aus allen Präsentationen ein Word-Dokument generieren und als Word-Dokument speichern" Command="{Binding ButtonStartClickCommand}" Margin="5,5,20,5" />
+                                <Button Content="Aus allen Präsentationen ein Word-Dokument generieren und als PDF speichern" Command="{Binding GeneratePOC_PDFCommand}" Margin="5,5,20,5" />
+                                <Button Content="Alle Präsentationen zu einer einzelnen Powerpoint-Präsentation zusammenfassen" Command="{Binding MergePresentationsCommand}"  Margin="5,5,20,5" />
+                                <Button Content="Aus allen Präsentationen eine PDF-Datei generieren" Command="{Binding GeneratePresentationPDFCommand}"  Margin="5,5,20,5" />
+                                <ContentControl Visibility="{Binding GeneratorIsWorking,Converter={StaticResource bool2vis}}" Height="20" Width="20"
+                                    ContentTemplate="{DynamicResource {x:Static adonisUi:Templates.LoadingCircle}}"
+                                    Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
                             </StackPanel>
                         </GroupBox>
                     </Grid>
                 </Grid>
-            </ScrollViewer>
         </DockPanel>
         <Grid x:Name="gridHeaderBar"
               HorizontalAlignment="Center"

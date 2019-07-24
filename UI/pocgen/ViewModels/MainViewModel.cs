@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,11 +27,12 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
 
             // Cleanup
             tempPath = Path.Combine(Path.GetTempPath(), "pocgen");
-            if(Directory.Exists(tempPath))
+            if (Directory.Exists(tempPath))
                 Directory.Delete(tempPath, true);
             Directory.CreateDirectory(tempPath);
 
             tempImagePathForPOC = Directory.CreateDirectory(Path.Combine(tempPath, "genSlidesPOC")).FullName;
+            IsGeneratingPreview = false;
         }
 
         private readonly string tempPath;
@@ -55,59 +57,71 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                 CurrentSlide = 0;
                 PowerPointPresentations.Clear();
 
-                tempImagePath = Path.Combine(tempPath,Guid.NewGuid().ToString());
+                tempImagePath = Path.Combine(tempPath, Guid.NewGuid().ToString());
 
-                using (PowerPointHelper pph = new PowerPointHelper())
+                Task.Run(() =>
                 {
-                    int presentationCounter = 0;
-                    int presentationStartingIndex = 0;
-                    foreach (var file in Directory.GetFiles(presentationRootFolderPath, "*.pptx", SearchOption.AllDirectories).Where(x => x.Contains("~$") == false))
+                    IsGeneratingPreview = true;
+                    using (PowerPointHelper pph = new PowerPointHelper())
                     {
-                        var ppi = new PowerPointPresentationItem(file);
-                        ppi.PropertyChanged += (sender, e) =>
+                        int presentationCounter = 0;
+                        int presentationStartingIndex = 0;
+                        foreach (var file in Directory.GetFiles(presentationRootFolderPath, "*.pptx", SearchOption.AllDirectories).Where(x => x.Contains("~$") == false))
                         {
-                            if (e.PropertyName == "IsIncluded")
-                                IsAtLeastOnePresentationSelected = PowerPointPresentations.Any(x => x.IsIncluded);
-                        };
+                            var ppi = new PowerPointPresentationItem(file);
+                            ppi.PropertyChanged += (sender, e) =>
+                            {
+                                if (e.PropertyName == "IsIncluded")
+                                    IsAtLeastOnePresentationSelected = PowerPointPresentations.Any(x => x.IsIncluded);
+                            };
 
-                        ppi.PreviewImagePath = Path.Combine(tempImagePath,presentationCounter++.ToString().PadLeft(5,'0'));
-                        // Generate Images (Task ?)
-                        var presentation = pph.OpenPresentation(file);
-                        Directory.CreateDirectory(ppi.PreviewImagePath);
-                        pph.ExportAllSlidesAsImage(presentation, ppi.PreviewImagePath);
-                        presentation.Close();
+                            ppi.PreviewImagePath = Path.Combine(tempImagePath, presentationCounter++.ToString().PadLeft(5, '0'));
+                            // Generate Images (Task ?)
+                            var presentation = pph.OpenPresentation(file);
+                            Directory.CreateDirectory(ppi.PreviewImagePath);
+                            pph.ExportAllSlidesAsImage(presentation, ppi.PreviewImagePath);
+                            presentation.Close();
 
-                        int numberOfSlides = Directory.GetFiles(ppi.PreviewImagePath).Length;
-                        ppi.PreviewImageRange = (presentationStartingIndex, presentationStartingIndex + numberOfSlides -1);
-                        presentationStartingIndex += numberOfSlides;
+                            int numberOfSlides = Directory.GetFiles(ppi.PreviewImagePath).Length;
+                            ppi.PreviewImageRange = (presentationStartingIndex, presentationStartingIndex + numberOfSlides - 1);
+                            presentationStartingIndex += numberOfSlides;
 
-                        PowerPointPresentations.Add(ppi);
-                    }
-                }
-                if (PowerPointPresentations.Count > 0)
-                {
-                    int filenumber = 0;
-                    foreach(string subdir in Directory.GetDirectories(tempImagePath))
-                    {
-                        foreach (string file in Directory.GetFiles(subdir))
-                        {
-                            File.Move(file, Path.Combine(tempImagePath, $"{filenumber++}.png"));
+                            Application.Current.Dispatcher.Invoke(() => PowerPointPresentations.Add(ppi));
                         }
                     }
+                    if (PowerPointPresentations.Count > 0)
+                    {
+                        int filenumber = 0;
+                        foreach (string subdir in Directory.GetDirectories(tempImagePath))
+                        {
+                            foreach (string file in Directory.GetFiles(subdir))
+                            {
+                                File.Move(file, Path.Combine(tempImagePath, $"{filenumber++}.png"));
+                            }
+                        }
 
-                    foreach (string subdir in Directory.GetDirectories(tempImagePath))
-                        Directory.Delete(subdir);
+                        foreach (string subdir in Directory.GetDirectories(tempImagePath))
+                            Directory.Delete(subdir);
 
-                    ResetPreviewCommand.Execute(null);
-                    IsValidPresentationRootFolderSelected = true;
-                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Valid FolderPath selected");
-                }
-                else
-                {
-                    IsValidPresentationRootFolderSelected = false;
-                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Invalid FolderPath selected");
-                }
+                        ResetPreviewCommand.Execute(null);
+                        IsValidPresentationRootFolderSelected = true;
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Valid FolderPath selected");
+                    }
+                    else
+                    {
+                        IsValidPresentationRootFolderSelected = false;
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Invalid FolderPath selected");
+                    }
+                    IsGeneratingPreview = false;
+                });
             }
+        }
+
+        private bool isGeneratingPreview;
+        public bool IsGeneratingPreview
+        {
+            get => isGeneratingPreview;
+            set => SetValue(ref isGeneratingPreview, value);
         }
 
         private bool isValidFolderSelected;
@@ -175,36 +189,43 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             {
                 buttonStartClickCommand = buttonStartClickCommand ?? new RelayCommand(parameter =>
                 {
-                    UIElementsEnabled = false;
-                    GeneratorIsWorking = true;
-                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Start");
-
-                    string tempPresentation = Path.Combine(tempPath, $"{Guid.NewGuid()}.pptx");
-                    string tempDocument = Path.Combine(tempPath, $"{Guid.NewGuid()}.docx");
-
-                    using (PowerPointHelper pph = new PowerPointHelper())
+                    Task.Run(() =>
                     {
-                        var mergedPresentation = pph.CreateNewPresentation(tempPresentation);
-                        pph.MergePresentationContentIntoNewPresentation(PowerPointPresentations.Where(x => x.IsIncluded).Select(x => x.FullPath), mergedPresentation);
-                        pph.ExportAllSlidesAsImage(mergedPresentation, tempImagePathForPOC);
-                        pph.SavePresentationAs(mergedPresentation, tempPresentation);
-                    }
+                        UIElementsEnabled = false;
+                        GeneratorIsWorking = true;
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Start");
 
-                    WordGenerator generator = new WordGenerator();
-                    generator.GeneratePOC_Document(tempPresentation, tempImagePathForPOC, tempDocument);
-                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Finish");
+                        string tempPresentation = Path.Combine(tempPath, $"{Guid.NewGuid()}.pptx");
+                        string tempDocument = Path.Combine(tempPath, $"{Guid.NewGuid()}.docx");
 
-                    SaveFileDialog dlg = new SaveFileDialog();
-                    dlg.Title = "POC Speichern unter";
-                    dlg.Filter = "Word Dokument | *.docx";
+                        using (PowerPointHelper pph = new PowerPointHelper())
+                        {
+                            var mergedPresentation = pph.CreateNewPresentation();
+                            pph.MergePresentationContentIntoNewPresentation(PowerPointPresentations.Where(x => x.IsIncluded).Select(x => x.FullPath), mergedPresentation);
+                            pph.ExportAllSlidesAsImage(mergedPresentation, tempImagePathForPOC);
+                            pph.SavePresentationAs(mergedPresentation, tempPresentation);
+                            mergedPresentation.Close();
+                        }
 
-                    if (dlg.ShowDialog() == true)
-                    {
-                        File.Move(tempDocument, dlg.FileName);
-                    }
+                        WordGenerator generator = new WordGenerator();
+                        generator.GeneratePOC_Document(tempPresentation, tempImagePathForPOC, tempDocument);
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Finish");
 
-                    UIElementsEnabled = true;
-                    GeneratorIsWorking = false;
+                        SaveFileDialog dlg = new SaveFileDialog();
+                        dlg.Title = "POC Speichern unter";
+                        dlg.Filter = "Word Dokument | *.docx";
+
+                        if (dlg.ShowDialog() == true)
+                        {
+                            if (File.Exists(dlg.FileName))
+                                File.Delete(dlg.FileName);
+
+                            File.Move(tempDocument, dlg.FileName);
+                        }
+
+                        UIElementsEnabled = true;
+                        GeneratorIsWorking = false;
+                    });
                 });
                 return buttonStartClickCommand;
             }
@@ -253,6 +274,156 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             }
         }
 
+        private ICommand mergePresentationsCommand;
+        public ICommand MergePresentationsCommand
+        {
+            get
+            {
+                mergePresentationsCommand = mergePresentationsCommand ?? new RelayCommand(parameter =>
+                {
+                    Task.Run(() =>
+                    {
+                        UIElementsEnabled = false;
+                        GeneratorIsWorking = true;
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX-Generator-Start");
+
+                        string tempPresentation = Path.Combine(tempPath, $"{Guid.NewGuid()}.pptx");
+                        string tempDocument = Path.Combine(tempPath, $"{Guid.NewGuid()}.docx");
+
+                        using (PowerPointHelper pph = new PowerPointHelper())
+                        {
+                            var mergedPresentation = pph.CreateNewPresentation();
+                            pph.MergePresentationContentIntoNewPresentation(PowerPointPresentations.Where(x => x.IsIncluded).Select(x => x.FullPath), mergedPresentation);
+                            pph.ExportAllSlidesAsImage(mergedPresentation, tempImagePathForPOC);
+                            pph.SavePresentationAs(mergedPresentation, tempPresentation);
+                            mergedPresentation.Close();
+                        }
+
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX-Generator-Finish");
+
+                        SaveFileDialog dlg = new SaveFileDialog();
+                        dlg.Title = "PPTX Speichern unter";
+                        dlg.Filter = "PPTX| *.pptx";
+
+                        if (dlg.ShowDialog() == true)
+                        {
+                            if (File.Exists(dlg.FileName))
+                                File.Delete(dlg.FileName);
+
+                            File.Move(tempPresentation, dlg.FileName);
+                        }
+
+                        UIElementsEnabled = true;
+                        GeneratorIsWorking = false;
+                    });
+                });
+                return mergePresentationsCommand;
+            }
+        }
+
+        private ICommand generatePresentationPDFCommand;
+        public ICommand GeneratePresentationPDFCommand
+        {
+            get
+            {
+                generatePresentationPDFCommand = generatePresentationPDFCommand ?? new RelayCommand(parameter =>
+                {
+                    Task.Run(() =>
+                    {
+                        UIElementsEnabled = false;
+                        GeneratorIsWorking = true;
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX_to_PDF-Generator-Start");
+
+                        string tempPresentation = Path.Combine(tempPath, $"{Guid.NewGuid()}.pptx");
+                        string tempDocument = Path.Combine(tempPath, $"{Guid.NewGuid()}.docx");
+
+                        using (PowerPointHelper pph = new PowerPointHelper())
+                        {
+                            var mergedPresentation = pph.CreateNewPresentation();
+                            pph.MergePresentationContentIntoNewPresentation(PowerPointPresentations.Where(x => x.IsIncluded).Select(x => x.FullPath), mergedPresentation);
+                            pph.ExportAllSlidesAsImage(mergedPresentation, tempImagePathForPOC);
+                            pph.SavePresentationAs(mergedPresentation, tempPresentation);
+
+                            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX_to_PDF-Generator-Finish");
+
+                            SaveFileDialog dlg = new SaveFileDialog();
+                            dlg.Title = "PDF Speichern unter";
+                            dlg.Filter = "PDF| *.pdf";
+
+                            if (dlg.ShowDialog() == true)
+                            {
+                                if (File.Exists(dlg.FileName))
+                                    File.Delete(dlg.FileName);
+
+                                // ToDo: In den Helper auslagern
+                                mergedPresentation.ExportAsFixedFormat(dlg.FileName, Microsoft.Office.Interop.PowerPoint.PpFixedFormatType.ppFixedFormatTypePDF);
+                            }
+                            mergedPresentation.Close();
+                        }
+                        UIElementsEnabled = true;
+                        GeneratorIsWorking = false;
+                    });
+                });
+                return generatePresentationPDFCommand;
+            }
+        }
+
+        private ICommand generatePOC_PDFCommand;
+        public ICommand GeneratePOC_PDFCommand
+        {
+            get
+            {
+                generatePOC_PDFCommand = generatePOC_PDFCommand ?? new RelayCommand(parameter =>
+                {
+                    Task.Run(() =>
+                    {
+                        UIElementsEnabled = false;
+                        GeneratorIsWorking = true;
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PDF-Generator-Start");
+
+                        string tempPresentation = Path.Combine(tempPath, $"{Guid.NewGuid()}.pptx");
+                        string tempDocument = Path.Combine(tempPath, $"{Guid.NewGuid()}.docx");
+
+                        using (PowerPointHelper pph = new PowerPointHelper())
+                        {
+                            var mergedPresentation = pph.CreateNewPresentation();
+                            pph.MergePresentationContentIntoNewPresentation(PowerPointPresentations.Where(x => x.IsIncluded).Select(x => x.FullPath), mergedPresentation);
+                            pph.ExportAllSlidesAsImage(mergedPresentation, tempImagePathForPOC);
+                            pph.SavePresentationAs(mergedPresentation, tempPresentation);
+                            mergedPresentation.Close();
+                        }
+
+                        WordGenerator generator = new WordGenerator();
+                        generator.GeneratePOC_Document(tempPresentation, tempImagePathForPOC, tempDocument);
+                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PDF-Generator-Finish");
+
+                        SaveFileDialog dlg = new SaveFileDialog();
+                        dlg.Title = "PDF Speichern unter";
+                        dlg.Filter = "PDF| *.pdf";
+
+                        if (dlg.ShowDialog() == true)
+                        {
+                            if (File.Exists(dlg.FileName))
+                                File.Delete(dlg.FileName);
+
+                            // ToDo: Auslagern in die Logik-Layer
+                            // Word öffnen, PDF erzeugen und an dem Ort speichern
+                            Microsoft.Office.Interop.Word.Application appWD = new Microsoft.Office.Interop.Word.Application();
+                            var wordDocument = appWD.Documents.Open(tempDocument);
+                            wordDocument.ExportAsFixedFormat(dlg.FileName, Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF);
+                            wordDocument.Close(false);
+                            wordDocument = null;
+                            appWD.Quit();
+                            appWD = null;
+                        }
+
+                        UIElementsEnabled = true;
+                        GeneratorIsWorking = false;
+                    });
+                });
+                return generatePOC_PDFCommand;
+            }
+        }
         #region Preview
         private string[] includedImages;
 
@@ -281,7 +452,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                 }
                 catch (FileNotFoundException)
                 {
-                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Exception: Slide {CurrentSlide-1}.png not found !");
+                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Exception: Slide {CurrentSlide - 1}.png not found !");
                     PreviewSource = null;
                 }
             }
