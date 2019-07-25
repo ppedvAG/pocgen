@@ -16,7 +16,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             {
                 field = value;
                 OnPropertyChanged(propertyName);
-                Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}]Value changed to '{ value?.ToString() ?? "null"}'");
+                //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}]Value changed to '{ value?.ToString() ?? "null"}'");
                 return true;
             }
             return false;

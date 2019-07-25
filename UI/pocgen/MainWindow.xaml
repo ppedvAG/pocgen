@@ -30,9 +30,11 @@
                 <UniformGrid HorizontalAlignment="Right" Columns="2" Margin="{adonisUi:Space 1}">
                     <Button Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}"
                                     Content="Info"
-                                    Margin="{adonisUi:Space 1, 0, 0, 0}"/>
+                                    Margin="{adonisUi:Space 1, 0, 0, 0}"
+                                    Click="ShowInfoText"/>
                     <Button Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}"
-                                    Content="About">
+                                    Content="About"
+                                    Click="ShowAboutText">
                     </Button>
                 </UniformGrid>
             </Border>

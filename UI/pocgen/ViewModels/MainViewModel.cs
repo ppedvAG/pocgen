@@ -105,12 +105,12 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
 
                         ResetPreviewCommand.Execute(null);
                         IsValidPresentationRootFolderSelected = true;
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Valid FolderPath selected");
+                        //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Valid FolderPath selected");
                     }
                     else
                     {
                         IsValidPresentationRootFolderSelected = false;
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Invalid FolderPath selected");
+                        //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Invalid FolderPath selected");
                     }
                     IsGeneratingPreview = false;
                 });
@@ -173,7 +173,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                             PresentationRootFolderPath = dlg.FileName;
                         else
                         {
-                            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Directory does not contain .pptx files.");
+                            //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Directory does not contain .pptx files.");
                             MessageBox.Show("Das Verzeichnis  beinhaltet keine .pptx - Dateien");
                         }
                     }
@@ -193,7 +193,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                     {
                         UIElementsEnabled = false;
                         GeneratorIsWorking = true;
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Start");
+                        //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Start");
 
                         string tempPresentation = Path.Combine(tempPath, $"{Guid.NewGuid()}.pptx");
                         string tempDocument = Path.Combine(tempPath, $"{Guid.NewGuid()}.docx");
@@ -209,7 +209,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
 
                         WordGenerator generator = new WordGenerator();
                         generator.GeneratePOC_Document(tempPresentation, tempImagePathForPOC, tempDocument);
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Finish");
+                        //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Generator-Finish");
 
                         SaveFileDialog dlg = new SaveFileDialog();
                         dlg.Title = "POC Speichern unter";
@@ -285,7 +285,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                     {
                         UIElementsEnabled = false;
                         GeneratorIsWorking = true;
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX-Generator-Start");
+                        //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX-Generator-Start");
 
                         string tempPresentation = Path.Combine(tempPath, $"{Guid.NewGuid()}.pptx");
                         string tempDocument = Path.Combine(tempPath, $"{Guid.NewGuid()}.docx");
@@ -299,7 +299,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                             mergedPresentation.Close();
                         }
 
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX-Generator-Finish");
+                        //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX-Generator-Finish");
 
                         SaveFileDialog dlg = new SaveFileDialog();
                         dlg.Title = "PPTX Speichern unter";
@@ -332,7 +332,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                     {
                         UIElementsEnabled = false;
                         GeneratorIsWorking = true;
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX_to_PDF-Generator-Start");
+                        //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX_to_PDF-Generator-Start");
 
                         string tempPresentation = Path.Combine(tempPath, $"{Guid.NewGuid()}.pptx");
                         string tempDocument = Path.Combine(tempPath, $"{Guid.NewGuid()}.docx");
@@ -344,7 +344,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                             pph.ExportAllSlidesAsImage(mergedPresentation, tempImagePathForPOC);
                             pph.SavePresentationAs(mergedPresentation, tempPresentation);
 
-                            Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX_to_PDF-Generator-Finish");
+                            //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PPTX_to_PDF-Generator-Finish");
 
                             SaveFileDialog dlg = new SaveFileDialog();
                             dlg.Title = "PDF Speichern unter";
@@ -379,7 +379,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                     {
                         UIElementsEnabled = false;
                         GeneratorIsWorking = true;
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PDF-Generator-Start");
+                        //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PDF-Generator-Start");
 
                         string tempPresentation = Path.Combine(tempPath, $"{Guid.NewGuid()}.pptx");
                         string tempDocument = Path.Combine(tempPath, $"{Guid.NewGuid()}.docx");
@@ -395,7 +395,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
 
                         WordGenerator generator = new WordGenerator();
                         generator.GeneratePOC_Document(tempPresentation, tempImagePathForPOC, tempDocument);
-                        Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PDF-Generator-Finish");
+                        //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] PDF-Generator-Finish");
 
                         SaveFileDialog dlg = new SaveFileDialog();
                         dlg.Title = "PDF Speichern unter";
@@ -452,7 +452,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                 }
                 catch (FileNotFoundException)
                 {
-                    Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Exception: Slide {CurrentSlide - 1}.png not found !");
+                    //Trace.WriteLine($"[{GetType().Name}|{MethodBase.GetCurrentMethod().Name}] Exception: Slide {CurrentSlide - 1}.png not found !");
                     PreviewSource = null;
                 }
             }
