@@ -12,5 +12,6 @@ Anleitung:
 2) Ordner mit PowerPoint-Präsentationen (.pptx) auswählen
     * Beispielpräsentationen befinden sich im Ordner "Ressourcen"
 3) Die zu nutzenden Präsentationen auswählen
-4) "Start" - Drücken, um den Prozess zu starten
-5) Nach Prozessende mithilfe des automatisch auftauchenden Dialogs das Word-Dokument an einem beliebigen Ort abspeichern
+4) Die gewünschte Aktion auswählen und das Resultat im automatisch auftauchenden Dialog an einem beliebigen Ort abspeichern
+
+Weitere Informationen finden Sie im "Info" - Reiter der Applikation
