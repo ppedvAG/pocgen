@@ -66,7 +66,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                     {
                         int presentationCounter = 0;
                         int presentationStartingIndex = 0;
-                        foreach (var file in Directory.GetFiles(presentationRootFolderPath, "*.pptx", SearchOption.AllDirectories).Where(x => x.Contains("~$") == false))
+                        foreach (var file in Directory.GetFiles(presentationRootFolderPath, "*.pptx", SearchOption.AllDirectories).Where(x => x.Contains("~$") == false).OrderBy(f => f))
                         {
                             var ppi = new PowerPointPresentationItem(file);
                             ppi.PropertyChanged += (sender, e) =>
