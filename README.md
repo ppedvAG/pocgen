@@ -1,5 +1,5 @@
 # pocgen
-ppedv official course - Generator
+<a href="https://ppedv.de">ppedv</a> official course - Generator
 
 Download:
 https://github.com/ppedvAG/pocgen/releases
