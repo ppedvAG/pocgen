@@ -21,7 +21,7 @@ namespace pocgen
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         public MainWindow()
         {
@@ -32,7 +32,9 @@ namespace pocgen
 
         private void ChangeTheme(object sender, RoutedEventArgs e)
         {
-            ResourceLocator.SetColorScheme(Application.Current.Resources, _isDark ? ResourceLocator.LightColorScheme : ResourceLocator.DarkColorScheme);
+            Uri myTheme = new Uri("pack://application:,,,/pocgen;component/TheRealDarkTheme.xaml", UriKind.Absolute);
+
+            ResourceLocator.SetColorScheme(Application.Current.Resources, _isDark ? ResourceLocator.DarkColorScheme : myTheme);
             _isDark = !_isDark;
         }
 

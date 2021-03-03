@@ -7,9 +7,15 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="{x:Static adonisUi:ResourceLocator.LightColorScheme}"/>
-                <ResourceDictionary Source="{x:Static adonisUi:ResourceLocator.ClassicTheme}"/>
+                <ResourceDictionary Source="pack://application:,,,/AdonisUI;component/ColorSchemes/Dark.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/AdonisUI.ClassicTheme;component/Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            
+            <!--<Color x:Key="{x:Static adonisUi:Colors.AccentColor}">Green</Color>
+            <SolidColorBrush      x:Key="{x:Static adonisUi:Brushes.Layer1BackgroundBrush}">Black</SolidColorBrush>-->
+
         </ResourceDictionary>
+
     </Application.Resources>
 </Application>

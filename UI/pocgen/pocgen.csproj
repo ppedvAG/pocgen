@@ -15,6 +15,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>C:\Users\Michael\Desktop\pub\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -30,7 +31,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -71,13 +71,11 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AdonisUI, Version=1.13.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AdonisUI.1.13.0\lib\net45\AdonisUI.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="AdonisUI, Version=1.17.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AdonisUI.1.17.0\lib\net45\AdonisUI.dll</HintPath>
     </Reference>
-    <Reference Include="AdonisUI.ClassicTheme, Version=1.13.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AdonisUI.ClassicTheme.1.13.0\lib\net45\AdonisUI.ClassicTheme.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="AdonisUI.ClassicTheme, Version=1.17.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AdonisUI.ClassicTheme.1.17.0\lib\net45\AdonisUI.ClassicTheme.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
@@ -132,6 +130,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TheRealDarkTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
