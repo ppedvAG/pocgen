@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using pocgen;
 using ppedv.pocgen.Logic;
 using ppedv.pocgen.UI.WPF.Helpers;
 using System;
@@ -38,11 +39,45 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
 
             SelectPresentationSourceForUploadCommand = new RelayCommand(o => SelectPresentationForUpload());
             SelectSampleSourceForUploadCommand = new RelayCommand(o => SelectSampleSourceForUpload());
-            UploadCommand = new RelayCommand(o => Upload());
+
+            if (Application.Current is App app)
+            {
+                if (!string.IsNullOrWhiteSpace(app.KursName) && !string.IsNullOrWhiteSpace(app.SEMID))
+                    KursInfo = $"{app.KursName} [{app.SEMID}]";
+
+                UploadCommand = new RelayCommand(o => Upload(app.UploadURL));
+                UploadEnabled = !string.IsNullOrWhiteSpace(app.UploadURL);
+            }
+
+
         }
 
 
+        public bool UploadButtonEnabled
+        {
+            get => !string.IsNullOrWhiteSpace(PresentationSourceURI) && !string.IsNullOrWhiteSpace(SampleSourceURI);
+        }
 
+        public bool UploadEnabled
+        {
+            get => uploadEnabled;
+            set
+            {
+                uploadEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        public string KursInfo
+        {
+            get => kursInfo;
+            set
+            {
+                kursInfo = value;
+                OnPropertyChanged();
+            }
+        }
         private readonly string tempPath;
         private string tempImagePath;
         private readonly string tempImagePathForPOC;
@@ -523,6 +558,8 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
         private bool isSampleFileUploadSelected;
         private string sampleSourceURI;
         private string presentationSourceURI;
+        private string kursInfo = "App per Link aus der Email öffnen um Upload direkt durchzuführen";
+        private bool uploadEnabled = false;
 
         public ICommand PreviewBackwardCommand
         {
@@ -547,6 +584,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                 isSampleFileUploadSelected = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsSampleLinkSelected));
+                OnPropertyChanged(nameof(UploadButtonEnabled));
             }
         }
         public bool IsSampleLinkSelected { get => !IsSampleFileUploadSelected; }
@@ -558,6 +596,8 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             {
                 sampleSourceURI = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(UploadButtonEnabled));
+
             }
         }
 
@@ -568,6 +608,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             {
                 presentationSourceURI = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(UploadButtonEnabled));
             }
         }
 
@@ -596,12 +637,12 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             }
         }
 
-        private async void Upload()
+        private async void Upload(string uploadUrl)
         {
 
-            var url = $"https://download.ppedv.de/FileUploadHandler.ashx";
-            
-            
+            //var url = $"https://download.ppedv.de/FileUploadHandler.ashx";
+
+
             //todo change
             string SemAppId = "208493";
             var sampleURL = "http://www.github.com/ppedvag";
@@ -618,7 +659,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             httpContent.Add(new ByteArrayContent(File.ReadAllBytes(presFilePath)), $"{presFileName}_P", presFileName);
             httpContent.Add(new ByteArrayContent(File.ReadAllBytes(sampFilePath)), $"{sampFileName}_S", sampFileName);
 
-            var response = await http.PostAsync(url, httpContent);
+            var response = await http.PostAsync(uploadUrl, httpContent);
 
             if (response.IsSuccessStatusCode)
                 MessageBox.Show("Vielen Dank für den Upload, Sie dürfen sich nun einen Keks genehmigen und Ihre nächste Stufe der Existenz genießen.");

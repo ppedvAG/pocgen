@@ -221,7 +221,7 @@
                 </StackPanel>
             </GroupBox>
 
-            <GroupBox Grid.Row="3" Margin="0,4,0,0" Header="Upload">
+            <GroupBox Grid.Row="3" Margin="0,4,0,0" Header="Upload" IsEnabled="{Binding UploadEnabled}">
                 <StackPanel>
                     <Grid>
                         <Grid.Resources>
@@ -254,11 +254,11 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock >Kurs:</TextBlock>
-                        <TextBox Grid.ColumnSpan="2" Grid.Column="1" IsEnabled="False">App per Link aus der eMail Öffnen um Upload durchzuführen</TextBox>
+                        <TextBox Text="{Binding KursInfo}" Grid.ColumnSpan="2" Grid.Column="1" IsEnabled="False"/>
 
                         <TextBlock Grid.Row="1">Präsentation:</TextBlock>
                         <TextBox Text="{Binding PresentationSourceURI}"  Grid.Column="1" Grid.Row="1" IsEnabled="False"/>
-                        <Button Command="{Binding SelectPresentationForUploadCommand}" Grid.Column="2" Grid.Row="1" ToolTip="Datei wählen..." >...</Button>
+                        <Button Command="{Binding SelectPresentationSourceForUploadCommand}" Grid.Column="2" Grid.Row="1" ToolTip="Datei wählen..." >...</Button>
 
                         <TextBlock Grid.Row="2">Sample</TextBlock>
                         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
@@ -266,10 +266,10 @@
                             <RadioButton IsChecked="{Binding IsSampleFileUploadSelected}">Zip Datei Upload</RadioButton>
                         </StackPanel>
                         <TextBlock Grid.Row="3"></TextBlock>
-                        <TextBox  Text="{Binding SampleSourceURI}" IsEnabled="{Binding IsSampleLinkSelected}" Grid.Column="1" Grid.Row="3" />
+                        <TextBox  Text="{Binding SampleSourceURI,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsSampleLinkSelected}" Grid.Column="1" Grid.Row="3" />
                         <Button Command="{Binding SelectSampleSourceForUploadCommand}" Grid.Column="2" ToolTip="Datei wählen..." Visibility="{Binding IsSampleFileUploadSelected,Converter={StaticResource bool2vis}}"  Grid.Row="3" >...</Button>
 
-                        <Button Command="{Binding UploadCommand}"  Grid.Row="4" Grid.ColumnSpan="3">Go Go Upload</Button>
+                        <Button IsEnabled="{Binding UploadButtonEnabled}" Command="{Binding UploadCommand}"  Grid.Row="4" Grid.ColumnSpan="3">Go Go Upload</Button>
                     </Grid>
 
                 </StackPanel>
