@@ -45,7 +45,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
                 if (!string.IsNullOrWhiteSpace(app.KursName) && !string.IsNullOrWhiteSpace(app.SEMID))
                     KursInfo = $"{app.KursName} [{app.SEMID}]";
 
-                UploadCommand = new RelayCommand(o => Upload(app.UploadURL));
+                UploadCommand = new RelayCommand(o => Upload(app.UploadURL, app.SEMID));
                 UploadEnabled = !string.IsNullOrWhiteSpace(app.UploadURL);
             }
 
@@ -401,6 +401,7 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
 
                                 // ToDo: In den Helper auslagern
                                 mergedPresentation.ExportAsFixedFormat(dlg.FileName, Microsoft.Office.Interop.PowerPoint.PpFixedFormatType.ppFixedFormatTypePDF);
+                                PresentationSourceURI = dlg.FileName;
                             }
                             mergedPresentation.Close();
                             PresentationSourceURI = dlg.FileName;
@@ -637,27 +638,26 @@ namespace ppedv.pocgen.UI.WPF.ViewModels
             }
         }
 
-        private async void Upload(string uploadUrl)
+        private async void Upload(string uploadUrl, string semAppId)
         {
 
-            //var url = $"https://download.ppedv.de/FileUploadHandler.ashx";
-
-
-            //todo change
-            string SemAppId = "208493";
-            var sampleURL = "http://www.github.com/ppedvag";
-            var presFileName = "Presentation_208493_Tests.zip";
-            var presFilePath = @"C:\Users\rulan\Desktop\Roßberger Upload Test\Presentation_208493_Tests.zip";
-            var sampFileName = "Samples_208493_url.txt";
-            var sampFilePath = @"C:\Users\rulan\Desktop\Roßberger Upload Test\Samples_208493_url.txt";
+            uploadUrl = $"https://download.ppedv.de/FileUploadHandler.ashx";
 
             var http = new HttpClient();
 
             var httpContent = new MultipartFormDataContent();
-            httpContent.Add(new StringContent(sampleURL), "SampleUrl");
-            httpContent.Add(new StringContent(SemAppId), "SemAppId");
-            httpContent.Add(new ByteArrayContent(File.ReadAllBytes(presFilePath)), $"{presFileName}_P", presFileName);
-            httpContent.Add(new ByteArrayContent(File.ReadAllBytes(sampFilePath)), $"{sampFileName}_S", sampFileName);
+            httpContent.Add(new StringContent(semAppId), "SeminarAppointID");
+
+            if (IsSampleFileUploadSelected)
+            {
+                var sampleFileName = Path.GetFileName(SampleSourceURI);
+                httpContent.Add(new ByteArrayContent(File.ReadAllBytes(SampleSourceURI)), $"{sampleFileName}_S", sampleFileName);
+            }
+            else
+                httpContent.Add(new StringContent(SampleSourceURI), "SampleUrl");
+
+            var presentationFileName = Path.GetFileName(PresentationSourceURI);
+            httpContent.Add(new ByteArrayContent(File.ReadAllBytes(PresentationSourceURI)), $"{presentationFileName}_P", presentationFileName);
 
             var response = await http.PostAsync(uploadUrl, httpContent);
 
