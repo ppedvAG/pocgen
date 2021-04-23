@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 
 namespace pocgen
@@ -21,28 +23,30 @@ namespace pocgen
         {
             try
             {
+
                 if (e.Args.Count() > 0)
                 {
-                    var chunks = e.Args.First().Split('|');
+                    var argAsUri = Uri.UnescapeDataString(e.Args.First());
+                    var chunks = argAsUri.ToString().Split('|');
                     if (chunks.Count() == 3)
                     {
-                        SEMID = chunks[0];
+                        SEMID = chunks[0].Split('/')[2];
                         KursName = chunks[1];
                         UploadURL = chunks[2];
                     }
                     else
                     {
-                        ShowCommandLineInfo();
+                        ShowCommandLineInfo(e.Args[0]);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Application_Startup exception: {ex.Message}");
+                ShowCommandLineInfo(e.Args[0], $"Application_Startup exception: {ex.Message}");
             }
         }
 
-        public static void ShowCommandLineInfo()
+        public static void ShowCommandLineInfo(string startParameter = "", string errorMsg = "")
         {
             var info = @"Für den Upload per PocGen muss ein einzelner Startparameter angegeben werden.
 Die Daten müssen mit einem senkrechten Strich (|) getrennt und in der korrekten Reihenfolge angegeben werden:
@@ -53,7 +57,25 @@ z.B. 12345|Upload für Anfänger|https://ppedv.de/AnyPage.ashx
 
 Die echte Upload-URL wird nicht in Programm hinterlegt, weil der Quellcode öffentlich zugänglich ist.";
 
-            MessageBox.Show(info,"Startparameter");
+
+            var spInfo = $"Startparameter: {startParameter}";
+
+            var sb = new StringBuilder();
+            if (!string.IsNullOrEmpty(startParameter))
+            {
+                sb.AppendLine(spInfo);
+                sb.AppendLine();
+            }
+
+            if (!string.IsNullOrWhiteSpace(errorMsg))
+            {
+                sb.AppendLine(errorMsg);
+                sb.AppendLine();
+            }
+
+            sb.Append(info);
+
+            MessageBox.Show(sb.ToString(), "Startparameter");
         }
     }
 
